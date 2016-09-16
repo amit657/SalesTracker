@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#f0f0f0">
+
+
+
+    <TableRow android:gravity="center_horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Select beat route to refresh mobile data"
+            android:id="@+id/textView2"
+            android:layout_column="0"
+            android:textSize="15dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="20dp" />
+    </TableRow>
+
+    <TableRow android:gravity="center_horizontal">
+
+        <Spinner
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/spinner"
+            android:layout_column="0"
+            android:prompt="@string/beat_route_prompt"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="20dp" />
+
+
+    </TableRow>
+
+
+
+
+    <TableRow android:gravity="center_horizontal">
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="REFRESH MOBILE DATA"
+            android:id="@+id/button6"
+            android:layout_column="0"
+            android:onClick="refreshMobileData"/>
+
+    </TableRow>
+
+
+
+    <TableRow android:gravity="center_horizontal">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="UPDATE SERVER"
+            android:id="@+id/button7"
+            android:layout_column="0"
+            android:onClick="updateServer"
+            android:layout_marginTop="20dp" />
+    </TableRow>
+
+    <TableRow android:gravity="center_horizontal">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="UPDATE NEW CUSTOMERS ON SERVER"
+            android:id="@+id/button8"
+            android:layout_column="0"
+            android:onClick="updateNewCustomersOnServer"
+            android:layout_marginTop="20dp" />
+    </TableRow>
+
+    <TableRow android:gravity="center_horizontal">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="LOAD BEAT ROUTES FROM SERVER"
+            android:id="@+id/button9"
+            android:layout_column="0"
+            android:onClick="loadBeatRoutesFromServer"
+            android:layout_marginTop="20dp" />
+    </TableRow>
+
+    <TableRow android:gravity="center_horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Server Host"
+            android:id="@+id/textView6"
+            android:layout_column="0"
+            android:layout_marginTop="20dp"
+            android:textSize="20dp" />
+    </TableRow>
+
+    <TableRow android:gravity="center_horizontal">
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/serverHostEt"
+            android:layout_column="0" />
+    </TableRow>
+
+    <TableRow android:gravity="center_horizontal">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Update Server Host"
+            android:id="@+id/button13"
+            android:layout_column="0"
+            android:onClick="updateServerHost" />
+    </TableRow>
+
+
+</TableLayout>

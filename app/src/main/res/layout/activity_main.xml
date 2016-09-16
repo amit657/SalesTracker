@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#f0f0f0" >
+
+    <TableRow android:gravity="center_horizontal">
+        <TextView
+            android:id="@+id/TextView01"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dip"
+            android:layout_marginRight="5dip"
+            android:text="Shyam Sales and Marketing"
+            android:textSize="15dip"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:paddingTop="10dp"
+            android:textColor="#ffdf1412">
+        </TextView>
+
+    </TableRow>
+
+
+    <TableRow android:gravity="center_horizontal">
+        <TextView
+            android:id="@+id/TextView02"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dip"
+            android:layout_marginRight="5dip"
+            android:text="SalesTracker"
+            android:textSize="20dip"
+            android:layout_gravity="center_horizontal">
+        </TextView>
+    </TableRow >
+
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:gravity="center_horizontal">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Update Customer Status"
+            android:id="@+id/button"
+            android:layout_column="0"
+            android:onClick="loadCustomerStatusUpdate"
+            android:layout_marginTop="10dp" />
+    </TableRow>
+
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:gravity="center_horizontal">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add New Customer"
+            android:id="@+id/button8"
+            android:layout_column="0"
+            android:onClick="addNewCustomer_Click" />
+    </TableRow>
+
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:gravity="center_horizontal">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="List New Customer"
+            android:id="@+id/button9"
+            android:layout_column="0"
+            android:onClick="listNewCustomer_Click" />
+    </TableRow>
+
+
+
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:gravity="center_horizontal">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="List Visited Customer"
+            android:id="@+id/button10"
+            android:layout_column="0"
+            android:onClick="listVisitedCustomer_Click" />
+    </TableRow>
+
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:gravity="center_horizontal">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Pending Customer Visit"
+            android:id="@+id/button13"
+            android:layout_column="0"
+            android:onClick="listPendingCustomerVisited_Click" />
+    </TableRow>
+
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:gravity="center_horizontal">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="LIST ALL CUSTOMERS"
+            android:id="@+id/button12"
+            android:layout_column="0"
+            android:onClick="listAllCustomers_click" />
+    </TableRow>
+
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:gravity="center_horizontal">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Settings"
+            android:id="@+id/button11"
+            android:layout_column="0"
+            android:onClick="settingsBtn_click"
+            android:textAlignment="center" />
+    </TableRow>
+
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:gravity="center_horizontal">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="DATA REFRESH [ADMIN]"
+            android:id="@+id/button2"
+            android:layout_column="0"
+            android:onClick="loadDataRefreshActivity"/>
+    </TableRow>
+
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:gravity="center_horizontal">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="CREATE ORDER"
+            android:id="@+id/button3"
+            android:layout_column="0"
+            android:onClick="loadOrderingActivity_Click"/>
+    </TableRow>
+
+</TableLayout>

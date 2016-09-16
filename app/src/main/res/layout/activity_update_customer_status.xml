@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#f0f0f0" >
+
+    <TableRow>
+
+        <TextView android:text="@string/select_customer" android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+            android:minHeight="25dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="20dp"
+            android:textSize="20dp" />
+    </TableRow>
+    <TableRow android:layout_marginRight="20dp">
+
+        <AutoCompleteTextView
+            android:id="@+id/customers_ac"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dip"
+            android:layout_marginRight="10dip"
+            android:textStyle="bold"
+            android:width="250dip" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="LOC"
+            android:id="@+id/locationStausTv"
+            android:layout_column="1"
+            android:background="#ffff4511" />
+
+    </TableRow>
+
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="New Text"
+            android:id="@+id/customer_details_tv"
+            android:layout_column="0"
+            android:layout_marginTop="10dp"
+            android:textSize="15dp"
+            android:layout_marginLeft="20dp"
+            android:height="80dp" />
+    </TableRow>
+
+
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <RadioGroup
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/order_status"
+            android:layout_marginTop="60dp"
+            android:weightSum="1"
+            android:id="@+id/orderStatusRadioGroup"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ORDER RECEIVED"
+                android:id="@+id/order_received_radioButton"
+
+                android:checked="false"
+                android:textSize="20dp" />
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="NO ORDER"
+                android:id="@+id/no_order_radioButton"
+
+                android:checked="false"
+                android:textSize="20dp"
+                android:layout_weight="0.13" />
+        </RadioGroup>
+
+
+
+
+    </TableRow>
+
+
+
+    <!--
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ORDER RECEIVED"
+            android:id="@+id/button3"
+            android:layout_column="0"
+            android:layout_marginLeft="20dp"
+            android:onClick="orderReceivedBtnAction"
+            android:background="#ff94ff6b"
+            android:layout_marginRight="20dp" />
+    </TableRow>
+
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"></TableRow>
+
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+    </TableRow>
+-->
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Reason for no order:"
+            android:id="@+id/textView"
+            android:layout_column="0"
+            android:minHeight="25dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="20dp"
+            android:textSize="20dp" />
+    </TableRow>
+
+
+
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/no_order_reason"
+            android:layout_column="0"
+            android:layout_marginLeft="20dp" />
+    </TableRow>
+
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="UPDATE STATUS"
+            android:id="@+id/button4"
+            android:layout_column="0"
+            android:layout_marginLeft="20dp"
+            android:onClick="updateStatusBtnAction"
+            android:background="#ffffae96"
+            android:layout_marginRight="20dp" />
+    </TableRow>
+
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"></TableRow>
+
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+    </TableRow>
+
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Update Location"
+            android:id="@+id/button5"
+            android:layout_column="0"
+            android:onClick="updateLocationBtnClick"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp" />
+    </TableRow>
+
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"></TableRow>
+
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Distance"
+            android:id="@+id/distancetv"
+            android:layout_column="0"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="20dp" />
+    </TableRow>
+</TableLayout>
