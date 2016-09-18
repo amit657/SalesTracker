@@ -1,6 +1,7 @@
 package salestracker.shyamsales.com.salestracker;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -34,11 +35,22 @@ public class ServerUpdateNewCustomers extends AsyncTask<String, String, String> 
 
     String statusMessage = "ERROR";
 
+    ProgressDialog dialog;
+
     public ServerUpdateNewCustomers(Context context, String serverHostAddr){
         mContext = context;
         serverHost = serverHostAddr;
+
+        dialog = new ProgressDialog(context);
     }
 
+
+
+    @Override
+    protected void onPreExecute() {
+        dialog.setTitle("Uploading new customer data");
+        dialog.show();
+    }
 
 
     protected String doInBackground(String... args) {
@@ -60,6 +72,7 @@ public class ServerUpdateNewCustomers extends AsyncTask<String, String, String> 
                 custData.put("beat_route", hm.get("beat_route"));
                 custData.put("date_updated", hm.get("date_updated"));
                 custData.put("id", hm.get("id"));
+                Log.d("Sending date updated:","date:" + hm.get("date_updated"));
                 custListArr.put(custData);
             }catch(JSONException je){
                 je.printStackTrace();
@@ -91,10 +104,15 @@ public class ServerUpdateNewCustomers extends AsyncTask<String, String, String> 
             nameValuePairs.add(new BasicNameValuePair("myHttpData", valueIWantToSend));
             httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
             // send the variable and value, in other words post, to the URL
-            Log.d("Request", "Sending new customers to server and waiting for response...");
+            Log.d("Request", "Sending new customers to server and waiting for response...\n"+valueIWantToSend);
             HttpResponse response = httpclient.execute(httppost);
             statusMessage = EntityUtils.toString(response.getEntity());
             Log.d("Response::::", statusMessage);
+            if(statusMessage.equals("SUCCESS")){
+                Log.d("SSM", "Success status received, clearing new customer data...");
+                mydb.deleteAllNewCustomerData();
+
+            }
         } catch (ClientProtocolException e) {
             // process execption
         } catch (IOException e) {
@@ -107,7 +125,7 @@ public class ServerUpdateNewCustomers extends AsyncTask<String, String, String> 
     @Override public void onPostExecute(String result)
     {
         //Toast.makeText(mContext, statusMessage, Toast.LENGTH_SHORT).show();
-
+        dialog.dismiss();
         new AlertDialog.Builder(mContext)
                 .setTitle("New Customer Update Status")
                 .setMessage(statusMessage)

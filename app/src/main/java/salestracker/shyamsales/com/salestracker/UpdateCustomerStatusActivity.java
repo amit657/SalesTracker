@@ -3,6 +3,7 @@ package salestracker.shyamsales.com.salestracker;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -19,6 +20,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,7 +56,18 @@ public class UpdateCustomerStatusActivity extends ActionBarActivity implements A
 
         mydb = new DBHelper(this);
 
-        ArrayList<String> array_list = mydb.getAllCustomer();
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("SalesTrackerPref", 0);
+        //Toast.makeText(this, pref.getString("salesman", null), Toast.LENGTH_SHORT).show();
+        int beatRouteId = pref.getInt("activeBeatRouteId",999999);
+
+        if(beatRouteId == 999999) {
+            Toast.makeText(getBaseContext(), "You need to set active beat route first. Goto settings screen to do that.",
+                    Toast.LENGTH_LONG).show();
+            return;
+        }
+
+
+        ArrayList<String> array_list = mydb.getAllCustomer(beatRouteId);
         item = new String[array_list.size()];
 
         for(int i=0; i<array_list.size(); i++){
@@ -85,7 +98,7 @@ public class UpdateCustomerStatusActivity extends ActionBarActivity implements A
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
-        locationManager.requestLocationUpdates( LocationManager.GPS_PROVIDER, 0,0, this);
+        locationManager.requestLocationUpdates( LocationManager.GPS_PROVIDER, 10000,10, this); //10000 milliseconds, 10 metres
 
         locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 
@@ -146,10 +159,17 @@ public class UpdateCustomerStatusActivity extends ActionBarActivity implements A
             mydb.updateVisitStatus(atv.getText().toString(), "ORDER_RECEIVED", "");
             Toast.makeText(getBaseContext(), "Status updated for: " + atv.getText().toString(),
                     Toast.LENGTH_LONG).show();
+            finish();
         }else{
             float difference = storeLocation.distanceTo(currentLocation) - distanceRange;
-            Toast.makeText(getBaseContext(), "You are "+difference+ " metres away from " + atv.getText().toString(),
-                    Toast.LENGTH_LONG).show();
+            if(difference > 100000){
+                Toast.makeText(getBaseContext(), "Please click on update location button." + atv.getText().toString(),
+                        Toast.LENGTH_LONG).show();
+            }else{
+                Toast.makeText(getBaseContext(), "You are "+difference+ " metres away from " + atv.getText().toString(),
+                        Toast.LENGTH_LONG).show();
+            }
+
         }
 
     }
@@ -157,14 +177,26 @@ public class UpdateCustomerStatusActivity extends ActionBarActivity implements A
     public void noOrderAction(){
 
         AutoCompleteTextView atv = (AutoCompleteTextView)findViewById(R.id.customers_ac);
-        EditText et = (EditText) findViewById(R.id.no_order_reason);
-        String reasonText = et.getText().toString();
 
-        if(reasonText.equals("")){
-            Toast.makeText(getBaseContext(), "Please enter a reason",
+        String reasonText;
+        Spinner sp = (Spinner)findViewById(R.id.no_order_reason_sp);
+        if(sp.getSelectedItem().toString().equals("Select a reason")){
+            Toast.makeText(getBaseContext(), "Please select a reason",
                     Toast.LENGTH_LONG).show();
             return;
+        }else if(sp.getSelectedItem().toString().equals("Others")){
+            EditText et = (EditText) findViewById(R.id.no_order_reason);
+            reasonText = et.getText().toString();
+            if(reasonText.equals("")){
+                Toast.makeText(getBaseContext(), "Please enter a reason",
+                        Toast.LENGTH_LONG).show();
+                return;
+            }
+        }else{
+            reasonText = sp.getSelectedItem().toString();
         }
+
+
 
 
         HashMap hm = mydb.getCustomerInfo(atv.getText().toString());
@@ -216,7 +248,8 @@ public class UpdateCustomerStatusActivity extends ActionBarActivity implements A
         RadioButton radioQtyButton;
         radioStatusGroup = (RadioGroup)findViewById(R.id.orderStatusRadioGroup);
         EditText et = (EditText) findViewById(R.id.no_order_reason);
-        String reasonText = et.getText().toString();
+        String reasonText = "";
+
         Log.d("LOC", "Checking radio button............");
         if(radioStatusGroup.getCheckedRadioButtonId()!= -1){
             int id = radioStatusGroup.getCheckedRadioButtonId();
@@ -229,6 +262,25 @@ public class UpdateCustomerStatusActivity extends ActionBarActivity implements A
                 orderStatus = "ORDER_RECEIVED";
             }
             if(selection.equals("NO ORDER")){
+                Log.d("SSM", "In No ORDER of Location update");
+                Spinner sp = (Spinner)findViewById(R.id.no_order_reason_sp);
+                if(sp.getSelectedItem().toString().equals("Select a reason")){
+                    Toast.makeText(getBaseContext(), "Please select a reason",
+                            Toast.LENGTH_LONG).show();
+                    return;
+                }else if(sp.getSelectedItem().toString().equals("Others")){
+                    reasonText = et.getText().toString();
+                    if(reasonText.equals("")){
+                        Toast.makeText(getBaseContext(), "Please enter a reason",
+                                Toast.LENGTH_LONG).show();
+                        return;
+                    }
+                }else{
+                    reasonText = sp.getSelectedItem().toString();
+                }
+
+
+
 
                 if(reasonText.equals("")){
                     Toast.makeText(getBaseContext(), "Please enter a reason",
@@ -237,10 +289,11 @@ public class UpdateCustomerStatusActivity extends ActionBarActivity implements A
                 }
                 orderStatus = "NO_ORDER";
             }
-            Log.d("LOC", "Inserting location update.........");
+            Log.d("LOC", "Inserting location update.......");
             mydb.insertLocationUpdate(atv.getText().toString(), currentLocation, orderStatus, reasonText);
             Toast.makeText(getBaseContext(), "Location update request submitted.",
                     Toast.LENGTH_LONG).show();
+            finish();
         }else{
 
             Toast.makeText(getBaseContext(), "Please select an order status",
@@ -255,6 +308,7 @@ public class UpdateCustomerStatusActivity extends ActionBarActivity implements A
 
     }
     public void updateLocationBtnClick(View view){
+
 
            if(currentLocation != null){
 

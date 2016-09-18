@@ -5,7 +5,7 @@
     android:background="#f0f0f0">
 
 
-
+<!--
     <TableRow android:gravity="center_horizontal">
 
         <TextView
@@ -32,7 +32,7 @@
 
 
     </TableRow>
-
+-->
 
 
 
@@ -43,7 +43,8 @@
             android:text="REFRESH MOBILE DATA"
             android:id="@+id/button6"
             android:layout_column="0"
-            android:onClick="refreshMobileData"/>
+            android:onClick="refreshMobileData"
+            android:layout_marginTop="20dp"/>
 
     </TableRow>
 
@@ -60,7 +61,7 @@
             android:onClick="updateServer"
             android:layout_marginTop="20dp" />
     </TableRow>
-
+<!--
     <TableRow android:gravity="center_horizontal">
 
         <Button
@@ -72,7 +73,7 @@
             android:onClick="updateNewCustomersOnServer"
             android:layout_marginTop="20dp" />
     </TableRow>
-
+-->
     <TableRow android:gravity="center_horizontal">
 
         <Button

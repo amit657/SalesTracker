@@ -1,6 +1,7 @@
 package salestracker.shyamsales.com.salestracker;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
@@ -32,10 +33,20 @@ public class LoadBeatRoutes extends AsyncTask<String, String, String> {
 
     private Context mContext;
     private String serverHost;
+
+    ProgressDialog dialog;
+
     public LoadBeatRoutes(Context context, String serverHostAddr) {
         mContext = context;
         serverHost = serverHostAddr;
         Log.d("SSM", "Constructor LoadBeatRoutes() Host: " + serverHost);
+        dialog = new ProgressDialog(context);
+    }
+
+    @Override
+    protected void onPreExecute() {
+        dialog.setTitle("Downloading Beat Routes");
+        dialog.show();
     }
 
 
@@ -77,7 +88,7 @@ public class LoadBeatRoutes extends AsyncTask<String, String, String> {
     @Override public void onPostExecute(String result)
     {
         //Toast.makeText(mContext, statusMessage, Toast.LENGTH_SHORT).show();
-
+        dialog.dismiss();
         new AlertDialog.Builder(mContext)
                 .setTitle("Beat Route Master Update Status")
                 .setMessage(statusMessage)

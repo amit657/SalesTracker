@@ -1,6 +1,7 @@
 package salestracker.shyamsales.com.salestracker;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -33,13 +34,22 @@ public class ServerUpdateLocationUpdates extends AsyncTask<String, String, Strin
     private String serverHost;
 
     String statusMessage = "ERROR";
+    private String salesMan;
+    ProgressDialog dialog;
 
-    public ServerUpdateLocationUpdates(Context context, String serverHostAddr){
+    public ServerUpdateLocationUpdates(Context context, String serverHostAddr, String sm){
         mContext = context;
         serverHost = serverHostAddr;
+        dialog = new ProgressDialog(context);
+        salesMan = sm;
     }
 
 
+    @Override
+    protected void onPreExecute() {
+        dialog.setTitle("Uploading location updates");
+        dialog.show();
+    }
 
     protected String doInBackground(String... args) {
 
@@ -59,6 +69,7 @@ public class ServerUpdateLocationUpdates extends AsyncTask<String, String, Strin
                 custData.put("reason", hm.get("reason"));
                 custData.put("date_updated", hm.get("date_updated"));
                 custData.put("id", hm.get("id"));
+                custData.put("salesman", salesMan);
                 Log.d("SSM", "Location update Id:" + hm.get("id"));
                 locUpdateArr.put(custData);
             }catch(JSONException je){
@@ -97,6 +108,7 @@ public class ServerUpdateLocationUpdates extends AsyncTask<String, String, Strin
             Log.d("Response::::", statusMessage);
             if(statusMessage.equals("SUCCESS")){
                 mydb.deleteAllLocationUpdateRequests();
+                statusMessage = statusMessage + "\n\n Local location update request DB cleared.";
                 Log.d("SSM", "Cleared all location update requests from DB.");
             }
         } catch (ClientProtocolException e) {
@@ -111,9 +123,9 @@ public class ServerUpdateLocationUpdates extends AsyncTask<String, String, Strin
     @Override public void onPostExecute(String result)
     {
         //Toast.makeText(mContext, statusMessage, Toast.LENGTH_SHORT).show();
-
+        dialog.dismiss();
         new AlertDialog.Builder(mContext)
-                .setTitle("New Customer Update Status")
+                .setTitle("Location change update Status")
                 .setMessage(statusMessage)
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .setPositiveButton(android.R.string.yes, null).show();

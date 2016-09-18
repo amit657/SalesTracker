@@ -1,7 +1,9 @@
 package salestracker.shyamsales.com.salestracker;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
@@ -57,6 +59,7 @@ public class DataUpdateActivity extends ActionBarActivity {
         EditText et = (EditText) findViewById(R.id.serverHostEt);
         et.setText(pref.getString("serverHost", null));
 
+        /*
         ArrayList<String> brArray= mydb.getAllBeatRoutes();
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(
@@ -65,7 +68,7 @@ public class DataUpdateActivity extends ActionBarActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         Spinner sItems = (Spinner) findViewById(R.id.spinner);
         sItems.setAdapter(adapter);
-
+*/
 
 /*
         try {
@@ -95,13 +98,13 @@ public class DataUpdateActivity extends ActionBarActivity {
         editor.commit();
         Toast.makeText(this, "Server Host Saved", Toast.LENGTH_SHORT).show();
     }
-
+/*
     public void updateNewCustomersOnServer(View view){
         Log.d("updateNewCustomersOnS..", "calling asynchronous task...");
         EditText et = (EditText) findViewById(R.id.serverHostEt);
         new ServerUpdateNewCustomers(this, et.getText().toString()).execute();
     }
-
+*/
     public void refreshMobileData(View view){
         /*mydb = new DBHelper(this);
         mydb.deleteAllData();
@@ -111,23 +114,79 @@ public class DataUpdateActivity extends ActionBarActivity {
 */
         System.out.println("=================DATABASE UDATED SUCCESSFULLY=======================");
 
-        Spinner sp = (Spinner) findViewById(R.id.spinner);
-        //Log.d("---SPINNER VALUE-------", String.valueOf(sp.getSelectedItemPosition()));
+       /*
         EditText et = (EditText) findViewById(R.id.serverHostEt);
         Log.d("SSM","Server Host: " + et.getText().toString());
         new LoadBeatRoutes(this, et.getText().toString()).execute();
-        new LoadCustomers(this, sp.getSelectedItemPosition() + 1, et.getText().toString()).execute();
-        //new LoadItems(this, et.getText().toString()).execute();
+        new LoadCustomers(this,et.getText().toString()).execute();
+        mydb.deleteAllNewCustomerData();
+        mydb.deleteAllLocationUpdateRequests();
+        */
+
+
+
+        new AlertDialog.Builder(this)
+                .setTitle("Update Server")
+                .setMessage("This will clear and reload the following data in this device:\n- Beat Routes\n- Customers\n- Clear all new customers\n- Clear all location updates")
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int whichButton) {
+
+                        EditText et = (EditText) findViewById(R.id.serverHostEt);
+                        Log.d("SSM","Server Host: " + et.getText().toString());
+                        new LoadBeatRoutes(DataUpdateActivity.this, et.getText().toString()).execute();
+                        new LoadCustomers(DataUpdateActivity.this,et.getText().toString()).execute();
+                        mydb.deleteAllNewCustomerData();
+                        mydb.deleteAllLocationUpdateRequests();
+
+                    }})
+                .setNegativeButton(android.R.string.no, null).show();
+
+
+
     }
 
 
     public void updateServer(View view){
 
-        //setContentView(R.layout.activity_data_update);
         SharedPreferences pref = getApplicationContext().getSharedPreferences("SalesTrackerPref", MODE_PRIVATE);
-        new ServerUpdate(this, pref.getString("serverHost", null), pref.getString("salesman", null)).execute();
-        new ServerUpdateNewCustomers(this, pref.getString("serverHost", null)).execute();
-        new ServerUpdateLocationUpdates(this, pref.getString("serverHost", null)).execute();
+
+        int beatRoute = pref.getInt("activeBeatRouteId", 999999);
+        if(beatRoute == 999999){
+            Toast.makeText(this, "No beat route is active. Goto settings and activate a beat route.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        //setContentView(R.layout.activity_data_update);
+
+
+
+
+        new AlertDialog.Builder(this)
+                .setTitle("Update Server")
+                .setMessage("This will send the following data to server:\n- Customer Visit Status\n- New Customers\n- Location Updates")
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int whichButton) {
+
+                        SharedPreferences pref = getApplicationContext().getSharedPreferences("SalesTrackerPref", MODE_PRIVATE);
+                        int beatRoute = pref.getInt("activeBeatRouteId", 999999);
+                        new ServerUpdate(DataUpdateActivity.this, pref.getString("serverHost", null), pref.getString("salesman", null), beatRoute).execute();
+                        new ServerUpdateNewCustomers(DataUpdateActivity.this, pref.getString("serverHost", null)).execute();
+                        new ServerUpdateLocationUpdates(DataUpdateActivity.this, pref.getString("serverHost", null), pref.getString("salesman", null)).execute();
+
+                    }})
+                .setNegativeButton(android.R.string.no, null).show();
+
+
+
+
+
+
+        //new ServerUpdate(this, pref.getString("serverHost", null), pref.getString("salesman", null), beatRoute).execute();
+        //new ServerUpdateNewCustomers(this, pref.getString("serverHost", null)).execute();
+        //new ServerUpdateLocationUpdates(this, pref.getString("serverHost", null), pref.getString("salesman", null)).execute();
 
     }
 

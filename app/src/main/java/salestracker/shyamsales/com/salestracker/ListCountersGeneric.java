@@ -1,14 +1,17 @@
 package salestracker.shyamsales.com.salestracker;
 
 import android.app.ListActivity;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,43 +22,84 @@ public class ListCountersGeneric extends ListActivity {
     ArrayList<HashMap<String,String>> list;
     private DBHelper mydb;
 
+    String activeBeatRouteName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mydb = new DBHelper(this);
         setContentView(R.layout.activity_list_counters_generic);
+        mydb = new DBHelper(this);
+
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("SalesTrackerPref", 0);
+        //Toast.makeText(this, pref.getString("salesman", null), Toast.LENGTH_SHORT).show();
+        int beatRouteId = pref.getInt("activeBeatRouteId",999999);
+
+        if(beatRouteId == 999999) {
+            Toast.makeText(getBaseContext(), "You need to set active beat route first. Goto settings screen to do that.",
+                    Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        activeBeatRouteName = mydb.getBeatRouteNameForId(beatRouteId);
+        Log.d("SSM","Beat route name: " + activeBeatRouteName + " for ID: " + beatRouteId);
+        TextView beatRouteTv = (TextView) findViewById(R.id.beatRouteName);
+        beatRouteTv.setText(activeBeatRouteName);
+
+
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
+            int activeBeatRouteId = pref.getInt("activeBeatRouteId", 999999);
+            if(activeBeatRouteId == 999999){
+                Toast.makeText(this, "Please make a beat route active in settings.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             String value = extras.getString("ListType");
             if(value.equals("VisitedCustomersList")){
-                populateVisitedCustomersList();
+                populateVisitedCustomersList(activeBeatRouteId);
                 TextView titleTextView = (TextView) findViewById(R.id.listTitle);
                 titleTextView.setText("Visited Customers List (" + list.size() + ")");
                 titleTextView.setTextColor(Color.GREEN);
             }
+
+            if(value.equals("LocationUpdatesList")){
+                populateLocationUpdatesList();
+                TextView titleTextView = (TextView) findViewById(R.id.listTitle);
+                titleTextView.setText("Location Updates List (" + list.size() + ") ");
+                titleTextView.setTextColor(Color.GREEN);
+            }
+
+
             if(value.equals("NewCustomersList")){
                 populateNewCustomersList();
                 TextView titleTextView = (TextView) findViewById(R.id.listTitle);
-                titleTextView.setText("New Customers List (" + list.size() + ")");
+                titleTextView.setText("New Customers List (" + list.size() + ") ");
                 titleTextView.setTextColor(Color.BLUE);
-
             }
 
             if(value.equals("AllCustomersList")){
-                populateAllCustomersList();
+                populateAllCustomersList(activeBeatRouteId);
                 TextView titleTextView = (TextView) findViewById(R.id.listTitle);
-                titleTextView.setText("All Customers List (" + list.size() + ")");
+                titleTextView.setText("All Customers List (" + list.size() + ") ");
                 titleTextView.setTextColor(Color.CYAN);
             }
 
             if(value.equals("VisitPendingCustomersList")){
-                populateVisitPendingCustomersList();
+                populateVisitPendingCustomersList(activeBeatRouteId);
                 TextView titleTextView = (TextView) findViewById(R.id.listTitle);
-                titleTextView.setText("Pending Customer Visit List (" + list.size() + ")");
+                titleTextView.setText("Pending Customer Visit List (" + list.size() + ") ");
                 titleTextView.setTextColor(Color.RED);
             }
+
+            if(value.equals("NearbyCustomersList")){
+                populateNearByCustomersList(activeBeatRouteId);
+                TextView titleTextView = (TextView) findViewById(R.id.listTitle);
+                titleTextView.setText("Pending Customer Visit List (" + list.size() + ") ");
+                titleTextView.setTextColor(Color.RED);
+            }
+
+
 
 
         }
@@ -68,21 +112,25 @@ public class ListCountersGeneric extends ListActivity {
                 new int[] {R.id.text1,R.id.text2, R.id.text3}
         );
 
-        if(list.size() > 0){
-            TextView tv = (TextView) findViewById(R.id.no_counter_visited_tv);
-            tv.setVisibility(View.INVISIBLE);
-        }
-
         setListAdapter(adapter);
 
     }
 
-    private void populateVisitPendingCustomersList(){
-        list = mydb.getAllPendingCustomerVisitData();
+
+    private void populateNearByCustomersList(int activeBeatRouteId){
+        //list = mydb.getAllNearByCustomers(100, activeBeatRouteId, )
     }
 
-    private void populateVisitedCustomersList(){
-        list = mydb.getAllVisitedCustomerData();
+    private void populateLocationUpdatesList(){
+        list = mydb.getAllLocationUpdatesData();
+    }
+
+    private void populateVisitPendingCustomersList(int activeBeatRouteId){
+        list = mydb.getAllPendingCustomerVisitData(activeBeatRouteId);
+    }
+
+    private void populateVisitedCustomersList(int activeBeatRouteId){
+        list = mydb.getAllVisitedCustomerData(activeBeatRouteId);
         Log.d("SSM", "In populateVisitedCustomersList...................");
         //TextView titleTextView = (TextView) findViewById(R.id.listTitle);
         //titleTextView.setText("asasda jjk");
@@ -101,8 +149,8 @@ public class ListCountersGeneric extends ListActivity {
         list = mydb.getAllNewCustomerData();
     }
 
-    private void populateAllCustomersList(){
-        list = mydb.getAllCustomerData();
+    private void populateAllCustomersList(int activeBeatRouteId){
+        list = mydb.getAllCustomerData(activeBeatRouteId);
     }
 
 

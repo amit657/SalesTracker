@@ -37,12 +37,16 @@ public class ServerUpdate extends AsyncTask<String, String, String> {
     private String salesman;
 
     String statusMessage = "ERROR";
+    int activeBeatRouteId;
+
+    ProgressDialog dialog;
 
     protected String doInBackground(String... args) {
 
         mydb = new DBHelper(mContext);
         JSONArray custListArr = new JSONArray();
-        ArrayList<HashMap<String, String>> customerData = mydb.getAllCustomerData();
+
+        ArrayList<HashMap<String, String>> customerData = mydb.getAllCustomerData(activeBeatRouteId);
 
 
         for(int i=0; i<customerData.size(); i++){
@@ -71,10 +75,20 @@ public class ServerUpdate extends AsyncTask<String, String, String> {
         return null;
     }
 
-    public ServerUpdate(Context context, String serverHostAddr, String sm){
+    public ServerUpdate(Context context, String serverHostAddr, String sm, int beatRouteId){
         mContext = context;
         serverHost = serverHostAddr;
         salesman = sm;
+        activeBeatRouteId = beatRouteId;
+        dialog = new ProgressDialog(context);
+    }
+
+
+
+    @Override
+    protected void onPreExecute() {
+        dialog.setTitle("Uploading customer status");
+        dialog.show();
     }
 
 
@@ -108,9 +122,10 @@ public class ServerUpdate extends AsyncTask<String, String, String> {
     @Override public void onPostExecute(String result)
     {
         //Toast.makeText(mContext, statusMessage, Toast.LENGTH_SHORT).show();
+        dialog.dismiss();
 
         new AlertDialog.Builder(mContext)
-                .setTitle("Server Update Status")
+                .setTitle("Customer visit status server update")
                 .setMessage(statusMessage)
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .setPositiveButton(android.R.string.yes, null).show();

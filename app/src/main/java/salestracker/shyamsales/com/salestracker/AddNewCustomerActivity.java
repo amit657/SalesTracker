@@ -9,10 +9,13 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
 
 
 public class AddNewCustomerActivity extends ActionBarActivity implements LocationListener {
@@ -27,6 +30,17 @@ public class AddNewCustomerActivity extends ActionBarActivity implements Locatio
         setContentView(R.layout.activity_add_new_customer);
 
         mydb = new DBHelper(this);
+
+
+        ArrayList<String> brArray= mydb.getAllBeatRoutes();
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+                this, android.R.layout.simple_spinner_item, brArray);
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        Spinner sItems = (Spinner) findViewById(R.id.beat_route_spinner);
+        sItems.setAdapter(adapter);
+
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 

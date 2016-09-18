@@ -1,17 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<ScrollView
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#f0f0f0" >
+    android:scrollbars="none"
+    android:layout_weight="1"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
 
     <TableRow>
 
         <TextView android:text="@string/select_customer" android:layout_width="wrap_content"
         android:layout_height="wrap_content"
             android:minHeight="25dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:layout_marginLeft="20dp"
             android:textSize="20dp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="LOC"
+            android:id="@+id/locationStausTv"
+            android:layout_column="1"
+            android:background="#ffff4511" />
     </TableRow>
     <TableRow android:layout_marginRight="20dp">
 
@@ -23,15 +36,6 @@
             android:layout_marginRight="10dip"
             android:textStyle="bold"
             android:width="250dip" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="LOC"
-            android:id="@+id/locationStausTv"
-            android:layout_column="1"
-            android:background="#ffff4511" />
-
     </TableRow>
 
     <TableRow
@@ -41,13 +45,13 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="New Text"
+            android:text=""
             android:id="@+id/customer_details_tv"
             android:layout_column="0"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             android:textSize="15dp"
             android:layout_marginLeft="20dp"
-            android:height="80dp" />
+            android:height="70dp" />
     </TableRow>
 
 
@@ -59,7 +63,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/order_status"
-            android:layout_marginTop="60dp"
             android:weightSum="1"
             android:id="@+id/orderStatusRadioGroup"
             android:orientation="horizontal">
@@ -71,7 +74,8 @@
                 android:id="@+id/order_received_radioButton"
 
                 android:checked="false"
-                android:textSize="20dp" />
+                android:textSize="20dp"
+                android:textColor="#ff53a64b" />
 
             <RadioButton
                 android:layout_width="wrap_content"
@@ -81,7 +85,8 @@
 
                 android:checked="false"
                 android:textSize="20dp"
-                android:layout_weight="0.13" />
+                android:layout_weight="0.13"
+                android:textColor="#ffe16851" />
         </RadioGroup>
 
 
@@ -118,6 +123,38 @@
 
     </TableRow>
 -->
+
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Select reason for no order:"
+            android:id="@+id/textView1"
+            android:layout_column="0"
+            android:minHeight="20dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="20dp"
+            android:textSize="20dp" />
+    </TableRow>
+
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <Spinner
+            android:id="@+id/no_order_reason_sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="20dp"
+            android:entries="@array/no_order_reason_arrays"
+        />
+
+    </TableRow>
+
     <TableRow
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
@@ -207,3 +244,4 @@
             android:layout_marginLeft="20dp" />
     </TableRow>
 </TableLayout>
+</ScrollView>

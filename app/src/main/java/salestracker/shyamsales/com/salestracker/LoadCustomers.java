@@ -31,10 +31,10 @@ public class LoadCustomers extends AsyncTask<String, String, String> {
     private String statusMessage = "ERROR";
 
     private Context mContext;
-    private int beatRouteId;
+    //private int beatRouteId;
     private String serverHost;
-    public LoadCustomers(Context context, int beatRouteId, String serverHostAddr) {
-        this.beatRouteId = beatRouteId;
+    public LoadCustomers(Context context, String serverHostAddr) {
+        //this.beatRouteId = beatRouteId;
         mContext = context;
         serverHost = serverHostAddr;
         Log.d("SSM", "Constructor LoadCustomers() Host: " + serverHost);
@@ -51,7 +51,7 @@ public class LoadCustomers extends AsyncTask<String, String, String> {
         List<NameValuePair> params = new ArrayList<NameValuePair>();
 
         //List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
-        params.add(new BasicNameValuePair("bid",Integer.toString(beatRouteId)));
+        //params.add(new BasicNameValuePair("bid",Integer.toString(beatRouteId)));
 
 
 
@@ -66,7 +66,7 @@ public class LoadCustomers extends AsyncTask<String, String, String> {
                     JSONArray custList = json.getJSONArray(TAG_CUST_ARR);
                     for (int i = 0; i < custList.length(); i++) {
                         JSONObject cust = custList.getJSONObject(i);
-                        mydb.insertCustomer(cust.get("customer_name").toString(), cust.get("address").toString(), cust.get("phone").toString(), cust.get("latitude").toString(), cust.get("longitude").toString());
+                        mydb.insertCustomer(cust.get("customer_name").toString(), cust.get("address").toString(), cust.get("phone").toString(), cust.get("latitude").toString(), cust.get("longitude").toString(), cust.getInt("beat_route"));
                     }
                     statusMessage = "Refresh Complete!";
                 } catch (JSONException je) {
@@ -76,6 +76,7 @@ public class LoadCustomers extends AsyncTask<String, String, String> {
             }
         }catch(Exception e){
             //Toast.makeText(mContext, "Error occurred while loading customers.", Toast.LENGTH_LONG).show();
+            e.printStackTrace();
         }
 
         return null;
@@ -87,7 +88,7 @@ public class LoadCustomers extends AsyncTask<String, String, String> {
         //Toast.makeText(mContext, statusMessage, Toast.LENGTH_SHORT).show();
 
         new AlertDialog.Builder(mContext)
-                .setTitle("New Customer Update Status")
+                .setTitle("Customer Master Update Status")
                 .setMessage(statusMessage)
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .setPositiveButton(android.R.string.yes, null).show();

@@ -41,4 +41,22 @@
         android:layout_marginTop="20dp"
         android:onClick="deleteAllNewCustomer_click" />
 
+
+    <TextView android:text="Active Beat Route" android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView4"
+        android:textSize="20dp"
+        android:layout_below="@+id/delete_all_new_cust_btn"
+        android:layout_marginTop="20dp" />
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/spinner"
+        android:prompt="@string/beat_route_prompt"
+        android:layout_marginTop="20dp"
+
+        android:layout_below="@+id/textView4"
+        android:padding="2dp" />
+
 </RelativeLayout>

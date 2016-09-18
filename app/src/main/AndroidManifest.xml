@@ -58,16 +58,24 @@
             android:parentActivityName=".MainActivity" >
         </activity>
         <activity
-            android:name=".OrderMainActivity"
-            android:label="@string/title_activity_order_main"
+            android:name=".CreateOrderActivity"
+            android:label="@string/title_activity_create_order"
             android:parentActivityName=".MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="salestracker.shyamsales.com.salestracker.MainActivity" />
         </activity>
         <activity
-            android:name=".CreateOrderActivity"
-            android:label="@string/title_activity_create_order"
+            android:name=".TargetSelectionActivity"
+            android:label="@string/title_activity_target_selection"
+            android:parentActivityName=".MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="salestracker.shyamsales.com.salestracker.MainActivity" />
+        </activity>
+        <activity
+            android:name=".TargetVisitStatusActivity"
+            android:label="@string/title_activity_target_visit_status"
             android:parentActivityName=".MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

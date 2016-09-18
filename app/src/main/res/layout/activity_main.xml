@@ -1,4 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+
+<ScrollView
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:scrollbars="none"
+    android:layout_weight="1"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+
 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
@@ -64,20 +74,6 @@
             android:onClick="addNewCustomer_Click" />
     </TableRow>
 
-    <TableRow
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:gravity="center_horizontal">
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="List New Customer"
-            android:id="@+id/button9"
-            android:layout_column="0"
-            android:onClick="listNewCustomer_Click" />
-    </TableRow>
-
 
 
     <TableRow
@@ -88,10 +84,10 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="List Visited Customer"
-            android:id="@+id/button10"
+            android:text="SET TARGET"
+            android:id="@+id/button3"
             android:layout_column="0"
-            android:onClick="listVisitedCustomer_Click" />
+            android:onClick="loadSetTarget_Click"/>
     </TableRow>
 
     <TableRow
@@ -102,10 +98,27 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Pending Customer Visit"
-            android:id="@+id/button13"
+            android:text="VIEW TARGET STATUS"
+            android:id="@+id/button4"
             android:layout_column="0"
-            android:onClick="listPendingCustomerVisited_Click" />
+            android:onClick="loadTargetStatus_Click"/>
+    </TableRow>
+
+    <TableRow android:gravity="center_horizontal">
+        <TextView
+            android:id="@+id/TextView03"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dip"
+            android:layout_marginRight="5dip"
+            android:text=""
+            android:textSize="17dip"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:paddingTop="10dp"
+            android:textColor="#ffdf1412">
+        </TextView>
+
     </TableRow>
 
     <TableRow
@@ -116,10 +129,10 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="LIST ALL CUSTOMERS"
-            android:id="@+id/button12"
+            android:text="LIST CUSTOMERS...."
+            android:id="@+id/button5"
             android:layout_column="0"
-            android:onClick="listAllCustomers_click" />
+            android:onClick="showListCustomersOptions_Click"/>
     </TableRow>
 
     <TableRow
@@ -151,18 +164,6 @@
             android:onClick="loadDataRefreshActivity"/>
     </TableRow>
 
-    <TableRow
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:gravity="center_horizontal">
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="CREATE ORDER"
-            android:id="@+id/button3"
-            android:layout_column="0"
-            android:onClick="loadOrderingActivity_Click"/>
-    </TableRow>
-
 </TableLayout>
+
+    </ScrollView>
