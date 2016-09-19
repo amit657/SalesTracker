@@ -3,6 +3,7 @@ package salestracker.shyamsales.com.salestracker;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.location.Location;
@@ -112,7 +113,10 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public boolean removeCustomerFromTarget(String customer){
         SQLiteDatabase db = this.getWritableDatabase();
-        db.execSQL("delete from " + CUSTOMER_VISIT_TARGET_TABLE_NAME + " where customer_name = '" + customer.replaceAll("'","\'") + "'");
+        String stmt= "delete from " + CUSTOMER_VISIT_TARGET_TABLE_NAME + " where customer_name = '" + customer.replaceAll("'", "''") + "'";
+        Log.d("removeCustomerFromT", stmt);
+        db.execSQL(stmt);
+
         return true;
 
     }
@@ -350,6 +354,14 @@ public class DBHelper extends SQLiteOpenHelper {
                 new String[] { customer_name });
     }
 
+    public void deleteAllTarget (int beatRouteId)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        db.execSQL("delete from visit_target where beat_route_id = " + beatRouteId);
+        /*return db.delete("customer_details",
+                "customer_name = ? ", new String[] {"*"});*/
+    }
 
     public void deleteAllData ()
     {

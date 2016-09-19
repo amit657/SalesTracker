@@ -9,22 +9,26 @@
 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
-
+    <TableRow>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:text="Detecting location..."
+            android:layout_marginTop="10dp"
+            android:id="@+id/locationStausTv"
+            android:background="#30ff510b"
+            android:width="100dp"/>
+    </TableRow>
     <TableRow>
 
         <TextView android:text="@string/select_customer" android:layout_width="wrap_content"
         android:layout_height="wrap_content"
             android:minHeight="25dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             android:layout_marginLeft="20dp"
-            android:textSize="20dp" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="LOC"
-            android:id="@+id/locationStausTv"
-            android:layout_column="1"
-            android:background="#ffff4511" />
+            android:textSize="20dp"
+            android:width="100dp"/>
     </TableRow>
     <TableRow android:layout_marginRight="20dp">
 
@@ -135,7 +139,7 @@
             android:id="@+id/textView1"
             android:layout_column="0"
             android:minHeight="20dp"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="10dp"
             android:layout_marginLeft="20dp"
             android:textSize="20dp" />
     </TableRow>
@@ -148,7 +152,7 @@
             android:id="@+id/no_order_reason_sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:layout_marginLeft="20dp"
             android:entries="@array/no_order_reason_arrays"
         />

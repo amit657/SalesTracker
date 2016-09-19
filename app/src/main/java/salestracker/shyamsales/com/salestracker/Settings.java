@@ -181,4 +181,23 @@ public class Settings extends ActionBarActivity {
 
 
     }
+
+
+    public void deleteAllTargets_click(View view){
+        new AlertDialog.Builder(this)
+                .setTitle("Delete targets")
+                .setMessage("Do you really want to delete all targets in active beat route?")
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int whichButton) {
+
+                        SharedPreferences pref = getApplicationContext().getSharedPreferences("SalesTrackerPref", MODE_PRIVATE);
+                        int beatRoute = pref.getInt("activeBeatRouteId", 999999);
+                        mydb.deleteAllTarget(beatRoute);
+                        Toast.makeText(Settings.this, "Targets cleared from database.", Toast.LENGTH_SHORT).show();
+
+                    }})
+                .setNegativeButton(android.R.string.no, null).show();
+    }
 }

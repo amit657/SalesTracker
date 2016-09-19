@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -98,10 +99,31 @@ public class UpdateCustomerStatusActivity extends ActionBarActivity implements A
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
-        locationManager.requestLocationUpdates( LocationManager.GPS_PROVIDER, 10000,10, this); //10000 milliseconds, 10 metres
+        locationManager.requestLocationUpdates( LocationManager.GPS_PROVIDER, 0,0, this); //10000 milliseconds, 5 metres
+        //locationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER, this,null);
+        locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
-        locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 
+
+        /*
+        String context = Context.LOCATION_SERVICE;
+        locationManager = (LocationManager) getSystemService(context);
+
+        Criteria crta = new Criteria();
+        crta.setAccuracy(Criteria.ACCURACY_FINE);
+        crta.setAltitudeRequired(false);
+        crta.setBearingRequired(false);
+        crta.setCostAllowed(true);
+        crta.setPowerRequirement(Criteria.POWER_HIGH);
+        String provider = locationManager.getBestProvider(crta, true);
+
+        // String provider = LocationManager.GPS_PROVIDER;
+        Location location = locationManager.getLastKnownLocation(provider);
+        //updateWithNewLocation(location);
+
+        locationManager.requestLocationUpdates(provider, 1000, 0,
+                this);
+*/
 
 
     }
@@ -155,7 +177,7 @@ public class UpdateCustomerStatusActivity extends ActionBarActivity implements A
         storeLocation.setLatitude(Double.parseDouble(hm.get("latitude").toString()));
         storeLocation.setLongitude(Double.parseDouble(hm.get("longitude").toString()));
 
-        if(checkLocationRange(storeLocation, currentLocation)){
+        if(checkLocationRange(storeLocation, currentLocation, currentLocation.getAccuracy())){
             mydb.updateVisitStatus(atv.getText().toString(), "ORDER_RECEIVED", "");
             Toast.makeText(getBaseContext(), "Status updated for: " + atv.getText().toString(),
                     Toast.LENGTH_LONG).show();
@@ -207,7 +229,7 @@ public class UpdateCustomerStatusActivity extends ActionBarActivity implements A
 
         //float distance = storeLocation.distanceTo(currentLocation);
         //System.out.println(">>>>>>>>>>>>>> Distance - " + distance);
-        if(checkLocationRange(storeLocation, currentLocation)){
+        if(checkLocationRange(storeLocation, currentLocation, currentLocation.getAccuracy())){
             mydb.updateVisitStatus(atv.getText().toString(), "NO_ORDER", reasonText);
             Toast.makeText(getBaseContext(), "Status updated for: " + atv.getText().toString(),
                     Toast.LENGTH_LONG).show();
@@ -220,9 +242,10 @@ public class UpdateCustomerStatusActivity extends ActionBarActivity implements A
 
     }
 
-    public boolean checkLocationRange(Location locA, Location locB){
+    public boolean checkLocationRange(Location locA, Location locB, float accuracy){
         float distance = locA.distanceTo(locB);
-        if(distance < distanceRange){
+
+        if(distance < distanceRange + accuracy){
             return true;
         }else{
             return false;
@@ -388,7 +411,7 @@ public class UpdateCustomerStatusActivity extends ActionBarActivity implements A
             Log.d("Latitude From Double",Double.toString(Double.parseDouble(hm.get("latitude").toString())));
 
             TextView atv = (TextView)findViewById(R.id.distancetv);
-            double difference = storeLocation.distanceTo(currentLocation) - distanceRange;
+            double difference = storeLocation.distanceTo(currentLocation) - distanceRange - currentLocation.getAccuracy();
 
             difference = Math.round(difference * 100.0) / 100.0;
 
@@ -397,9 +420,9 @@ public class UpdateCustomerStatusActivity extends ActionBarActivity implements A
             if(difference <= 0){
                 text = "You are within range of " + hm.get("customer_name").toString() + " " + difference;
 
-            }else{
+            }/*else{
                 text = "You are " + difference + " metres away from " + hm.get("customer_name").toString();
-            }
+            }*/
             atv.setText(text);
 
 
@@ -449,15 +472,26 @@ public class UpdateCustomerStatusActivity extends ActionBarActivity implements A
     @Override
     public void onLocationChanged(Location location) {
 
-        int lat = (int) (location.getLatitude());
-        int lng = (int) (location.getLongitude());
-        currentLocation = location;
+        //if(location.getAccuracy() < 15){
+            int lat = (int) (location.getLatitude());
+            int lng = (int) (location.getLongitude());
+            currentLocation = location;
 
-        TextView locTextView = (TextView) findViewById(R.id.locationStausTv);
-        locTextView.setBackgroundColor(65280);
-        //System.out.println(":::::::::::::::  onLocationChanged");
+            TextView locTextView = (TextView) findViewById(R.id.locationStausTv);
+            locTextView.setBackgroundColor(65280);
+            locTextView.setText("Acc:" + location.getAccuracy() + " + "+ distanceRange);
+            //System.out.println(":::::::::::::::  onLocationChanged");
 
-        //Toast.makeText(this, "Location change received ", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "Location change received ", Toast.LENGTH_SHORT).show();
+            /*Toast.makeText(getBaseContext(), "Location accuracy achieved: " + location.getAccuracy() + "!!",
+                    Toast.LENGTH_SHORT).show();*/
+            locationManager.removeUpdates(this);
+        /*}else{
+
+            TextView atv = (TextView)findViewById(R.id.distancetv);
+            atv.setText("Current location accuracy: " + location.getAccuracy());
+        }*/
+
     }
 
 
@@ -467,4 +501,6 @@ public class UpdateCustomerStatusActivity extends ActionBarActivity implements A
         // TODO Auto-generated method stub
 
     }
+
+
 }
