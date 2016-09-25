@@ -297,7 +297,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public HashMap getCustomerInfo(String customer_name){
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res =  db.rawQuery( "select * from customer_details where customer_name='"+ customer_name +"'", null );
+        Cursor res =  db.rawQuery( "select * from customer_details where customer_name='"+ customer_name.replaceAll("'", "''") +"'", null );
         System.out.println(">>>>>>>>>>>>>>>> select * from customer_details where customer_name='"+ customer_name +"'");
         HashMap hm = new HashMap();
         res.moveToFirst();
