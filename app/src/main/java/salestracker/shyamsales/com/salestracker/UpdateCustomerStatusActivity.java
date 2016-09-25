@@ -35,7 +35,7 @@ public class UpdateCustomerStatusActivity extends ActionBarActivity implements A
     AutoCompleteTextView textView=null;
     private ArrayAdapter<String> adapter;
 
-    private int distanceRange = 12;
+    private int distanceRange = 50;
     //These values show in autocomplete
     String item[];/*={
             "January", "February", "March", "April",
@@ -177,7 +177,7 @@ public class UpdateCustomerStatusActivity extends ActionBarActivity implements A
         storeLocation.setLatitude(Double.parseDouble(hm.get("latitude").toString()));
         storeLocation.setLongitude(Double.parseDouble(hm.get("longitude").toString()));
 
-        if(checkLocationRange(storeLocation, currentLocation, currentLocation.getAccuracy())){
+        if(checkLocationRange(storeLocation, currentLocation)){
             mydb.updateVisitStatus(atv.getText().toString(), "ORDER_RECEIVED", "");
             Toast.makeText(getBaseContext(), "Status updated for: " + atv.getText().toString(),
                     Toast.LENGTH_LONG).show();
@@ -229,7 +229,7 @@ public class UpdateCustomerStatusActivity extends ActionBarActivity implements A
 
         //float distance = storeLocation.distanceTo(currentLocation);
         //System.out.println(">>>>>>>>>>>>>> Distance - " + distance);
-        if(checkLocationRange(storeLocation, currentLocation, currentLocation.getAccuracy())){
+        if(checkLocationRange(storeLocation, currentLocation)){
             mydb.updateVisitStatus(atv.getText().toString(), "NO_ORDER", reasonText);
             Toast.makeText(getBaseContext(), "Status updated for: " + atv.getText().toString(),
                     Toast.LENGTH_LONG).show();
@@ -242,10 +242,10 @@ public class UpdateCustomerStatusActivity extends ActionBarActivity implements A
 
     }
 
-    public boolean checkLocationRange(Location locA, Location locB, float accuracy){
+    public boolean checkLocationRange(Location locA, Location locB){
         float distance = locA.distanceTo(locB);
 
-        if(distance < distanceRange + accuracy){
+        if(distance < distanceRange){
             return true;
         }else{
             return false;
@@ -472,25 +472,20 @@ public class UpdateCustomerStatusActivity extends ActionBarActivity implements A
     @Override
     public void onLocationChanged(Location location) {
 
-        //if(location.getAccuracy() < 15){
+        if(location.getAccuracy() < 10){
             int lat = (int) (location.getLatitude());
             int lng = (int) (location.getLongitude());
             currentLocation = location;
 
             TextView locTextView = (TextView) findViewById(R.id.locationStausTv);
             locTextView.setBackgroundColor(65280);
-            locTextView.setText("Acc:" + location.getAccuracy() + " + "+ distanceRange);
-            //System.out.println(":::::::::::::::  onLocationChanged");
-
-            //Toast.makeText(this, "Location change received ", Toast.LENGTH_SHORT).show();
-            /*Toast.makeText(getBaseContext(), "Location accuracy achieved: " + location.getAccuracy() + "!!",
-                    Toast.LENGTH_SHORT).show();*/
+            locTextView.setText("Acc:" + location.getAccuracy() + " + "+ distanceRange + " achieved.");
+            distanceRange = distanceRange + (int)location.getAccuracy();
             locationManager.removeUpdates(this);
-        /*}else{
-
-            TextView atv = (TextView)findViewById(R.id.distancetv);
-            atv.setText("Current location accuracy: " + location.getAccuracy());
-        }*/
+        }else{
+            TextView locTextView = (TextView) findViewById(R.id.locationStausTv);
+            locTextView.setText("Current location accuracy: " + location.getAccuracy());
+        }
 
     }
 
