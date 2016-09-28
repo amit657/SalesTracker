@@ -27,11 +27,14 @@ public class Settings extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-        EditText smEditText = (EditText) findViewById(R.id.salesManNameEt);
         SharedPreferences pref = getApplicationContext().getSharedPreferences("SalesTrackerPref", 0);
+        /*
+        EditText smEditText = (EditText) findViewById(R.id.salesManNameEt);
+
 
         //Toast.makeText(this, pref.getString("salesman", null), Toast.LENGTH_SHORT).show();
         smEditText.setText(pref.getString("salesman", null));
+        */
         mydb = new DBHelper(this);
 
 
@@ -109,6 +112,69 @@ public class Settings extends ActionBarActivity {
 
 
 
+        //////////////////////////  SALESMAN
+
+
+        ArrayList<String> smArray= mydb.getAllSalesman();
+
+
+        Spinner smItems = (Spinner) findViewById(R.id.sm_spinner);
+
+        ArrayAdapter<String> smAdapter = new ArrayAdapter<String>(
+                this, android.R.layout.simple_spinner_item, smArray);
+
+        smItems.setAdapter(smAdapter);
+
+        String activeSalesman = pref.getString("salesman", null);
+        if(activeSalesman != null){
+
+            Log.d("SSM","Salesman from storage: " + activeSalesman);
+            int i=0;
+            boolean salesmanFound = false;
+            for(i=0; i < smArray.size(); i++){
+                Log.d("SSM",smArray.get(i) + "  index: "+ i);
+                if(smArray.get(i).equals(activeSalesman)){
+                    Log.d("SSM","Breaking now...");
+                    salesmanFound = true;
+                    break;
+                }
+
+            }
+
+
+            Log.d("SSM","Position in spinner: " + i);
+            if(salesmanFound)
+                smItems.setSelection(i);
+        }
+
+
+
+
+        //final Settings currentView = this;
+
+        smItems.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, final int position, long id) {
+                // your code here
+
+                Spinner sp = (Spinner) findViewById(R.id.sm_spinner);
+
+                if(sp.getItemAtPosition(position).toString() == null){
+                    return;
+                }
+
+                setSalesman(sp.getItemAtPosition(position).toString());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // your code here
+            }
+
+        });
+
+
+
     }
 
     private void setActiveBeatRoute(int position){
@@ -124,6 +190,26 @@ public class Settings extends ActionBarActivity {
         editor.commit();
 
         Toast.makeText(this, "Beat Route " + brName + " is now active.", Toast.LENGTH_SHORT).show();
+
+    }
+
+
+    private void setSalesman(String smName){
+        if(smName == null){
+            return;
+        }
+        Log.d("setActiveSalesman", "Salesman received: " + smName);
+        Spinner sp = (Spinner) findViewById(R.id.sm_spinner);
+        //String smName = sp.getItemAtPosition(position).toString();
+        Log.d("setActiveSalesman", "Name : " + smName);
+        //mydb.getBeatRouteIdForName(smName);
+
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("SalesTrackerPref", 0);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putString("salesman", smName);
+        editor.commit();
+
+        Toast.makeText(this, "Salesman " + smName + " is now active.", Toast.LENGTH_SHORT).show();
 
     }
 
@@ -149,7 +235,7 @@ public class Settings extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-
+/*
     public void saveSalesMan_click(View view){
 
         EditText smEditText = (EditText) findViewById(R.id.salesManNameEt);
@@ -161,7 +247,7 @@ public class Settings extends ActionBarActivity {
         //prefs.edit().putString("salesman", smTextView.getText().toString());
         Toast.makeText(this, "Salesman Saved", Toast.LENGTH_SHORT).show();
     }
-
+*/
     public void deleteAllNewCustomer_click(View view){
 
         new AlertDialog.Builder(this)

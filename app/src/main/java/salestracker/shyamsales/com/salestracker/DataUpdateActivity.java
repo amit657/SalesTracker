@@ -136,6 +136,7 @@ public class DataUpdateActivity extends ActionBarActivity {
                         EditText et = (EditText) findViewById(R.id.serverHostEt);
                         Log.d("SSM","Server Host: " + et.getText().toString());
                         new LoadBeatRoutes(DataUpdateActivity.this, et.getText().toString()).execute();
+                        new LoadSalesman(DataUpdateActivity.this, et.getText().toString()).execute();
                         new LoadCustomers(DataUpdateActivity.this,et.getText().toString()).execute();
                         mydb.deleteAllNewCustomerData();
                         mydb.deleteAllLocationUpdateRequests();

@@ -45,7 +45,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public DBHelper(Context context)
     {
-        super(context, DATABASE_NAME , null, 15);
+        super(context, DATABASE_NAME , null, 16);
     }
 
     @Override
@@ -79,6 +79,11 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(
                 "CREATE TABLE IF NOT EXISTS visit_target " +
                         "(customer_name text primary_key, beat_route_id int)"
+        );
+
+        db.execSQL(
+                "CREATE TABLE IF NOT EXISTS salesman_master " +
+                        "(salesman_id int primary_key, salesman_name text)"
         );
 
         /*db.execSQL(
@@ -256,6 +261,16 @@ public class DBHelper extends SQLiteOpenHelper {
         return true;
     }
 
+    public boolean insertSalesman  (int smId, String smName)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("salesman_id", smId);
+        contentValues.put("salesman_name", smName);
+        db.insert("salesman_master", null, contentValues);
+        return true;
+    }
+
 
     public boolean insertNewCustomer  (String customer_name, String address, String phone, String latitude, String longitude, String beat_route)
     {
@@ -385,6 +400,11 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("delete from " + BEAT_ROUTE_MASTER_TABLE_NAME);
     }
 
+    public void deleteAllSalesman (){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("delete from salesman_master");
+    }
+
     public void updateCustomerNoOrder(String customerName, String reason){
 
     }
@@ -432,6 +452,23 @@ public class DBHelper extends SQLiteOpenHelper {
         while(res.isAfterLast() == false){
             array_list.add(res.getString(res.getColumnIndex(BEAT_ROUTE_COLUMN_NAME)));
             Log.d("SSM getAllBeatRoutes", res.getString(res.getColumnIndex(BEAT_ROUTE_COLUMN_NAME)));
+            res.moveToNext();
+        }
+        return array_list;
+    }
+
+    public ArrayList<String> getAllSalesman()
+    {
+        ArrayList<String> array_list = new ArrayList<String>();
+
+        //hp = new HashMap();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res =  db.rawQuery( "select * from salesman_master order by salesman_name asc", null );
+        res.moveToFirst();
+
+        while(res.isAfterLast() == false){
+            array_list.add(res.getString(res.getColumnIndex("salesman_name")));
+            Log.d("SSM getAllSalesman", res.getString(res.getColumnIndex("salesman_name")));
             res.moveToNext();
         }
         return array_list;

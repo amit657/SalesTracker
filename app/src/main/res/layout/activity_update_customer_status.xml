@@ -247,5 +247,20 @@
             android:layout_marginTop="20dp"
             android:layout_marginLeft="20dp" />
     </TableRow>
+
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Dummy"
+            android:id="@+id/dummy"
+            android:layout_column="0"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="20dp"
+            android:height="100dp" />
+    </TableRow>
 </TableLayout>
 </ScrollView>
