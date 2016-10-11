@@ -56,7 +56,7 @@ public class ServerUpdateLocationUpdates extends AsyncTask<String, String, Strin
 
         mydb = new DBHelper(mContext);
         JSONArray locUpdateArr = new JSONArray();
-        ArrayList<HashMap<String, String>> customerData = mydb.getAllLocationUpdatesData();
+        ArrayList<HashMap<String, String>> customerData = mydb.getAllLocationUpdateData();
 
         for(int i=0; i<customerData.size(); i++){
             HashMap hm = customerData.get(i);
@@ -107,9 +107,9 @@ public class ServerUpdateLocationUpdates extends AsyncTask<String, String, Strin
             statusMessage = EntityUtils.toString(response.getEntity());
             Log.d("Response::::", statusMessage);
             if(statusMessage.equals("SUCCESS")){
-                mydb.deleteAllLocationUpdateRequests();
-                statusMessage = statusMessage + "\n\n Local location update request DB cleared.";
-                Log.d("SSM", "Cleared all location update requests from DB.");
+                //mydb.deleteAllLocationUpdateRequests();
+                //statusMessage = statusMessage + "\n\n Local location update request DB cleared.";
+                //Log.d("SSM", "Cleared all location update requests from DB.");
             }
         } catch (ClientProtocolException e) {
             // process execption

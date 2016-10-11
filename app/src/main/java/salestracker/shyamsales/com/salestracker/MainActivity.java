@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import com.facebook.stetho.Stetho;
+
 import java.lang.annotation.Target;
 
 
@@ -19,6 +21,8 @@ public class MainActivity extends Activity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+        Stetho.initializeWithDefaults(this);
 
     }
 

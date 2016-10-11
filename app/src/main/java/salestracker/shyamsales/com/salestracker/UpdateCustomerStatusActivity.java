@@ -129,6 +129,12 @@ public class UpdateCustomerStatusActivity extends ActionBarActivity implements A
     }
 
     public void updateStatusBtnAction(View view){
+        statusUpdate();
+
+    }
+
+    public void statusUpdate(){
+
         if(currentLocation == null){
             Toast.makeText(getBaseContext(), "Your current location is not available!",
                     Toast.LENGTH_LONG).show();
@@ -235,8 +241,13 @@ public class UpdateCustomerStatusActivity extends ActionBarActivity implements A
                     Toast.LENGTH_LONG).show();
         }else{
             float difference = storeLocation.distanceTo(currentLocation) - distanceRange;
-            Toast.makeText(getBaseContext(), "You are "+difference+ " metres away from " + atv.getText().toString(),
-                    Toast.LENGTH_LONG).show();
+            if(difference > 100000){
+                Toast.makeText(getBaseContext(), "Please click on update location button." + atv.getText().toString(),
+                        Toast.LENGTH_LONG).show();
+            }else{
+                Toast.makeText(getBaseContext(), "You are "+difference+ " metres away from " + atv.getText().toString(),
+                        Toast.LENGTH_LONG).show();
+            }
         }
 
 
@@ -264,6 +275,16 @@ public class UpdateCustomerStatusActivity extends ActionBarActivity implements A
         if(atv.getText().toString().equals("")){
             Toast.makeText(getBaseContext(), "Please select a store",
                     Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        HashMap hm = mydb.getCustomerInfo(atv.getText().toString());
+        Location storeLocation = new Location("StoreLocation");
+        storeLocation.setLatitude(Double.parseDouble(hm.get("latitude").toString()));
+        storeLocation.setLongitude(Double.parseDouble(hm.get("longitude").toString()));
+
+        if(checkLocationRange(storeLocation, currentLocation)){
+            statusUpdate();
             return;
         }
 
@@ -312,6 +333,11 @@ public class UpdateCustomerStatusActivity extends ActionBarActivity implements A
                 }
                 orderStatus = "NO_ORDER";
             }
+
+
+
+
+
             Log.d("LOC", "Inserting location update.......");
             mydb.insertLocationUpdate(atv.getText().toString(), currentLocation, orderStatus, reasonText);
             Toast.makeText(getBaseContext(), "Location update request submitted.",

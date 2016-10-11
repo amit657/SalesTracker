@@ -64,7 +64,7 @@ public class ListCountersGeneric extends ListActivity {
             }
 
             if(value.equals("LocationUpdatesList")){
-                populateLocationUpdatesList();
+                populateLocationUpdatesList(activeBeatRouteId);
                 TextView titleTextView = (TextView) findViewById(R.id.listTitle);
                 titleTextView.setText("Location Updates List (" + list.size() + ") ");
                 titleTextView.setTextColor(Color.GREEN);
@@ -121,8 +121,8 @@ public class ListCountersGeneric extends ListActivity {
         //list = mydb.getAllNearByCustomers(100, activeBeatRouteId, )
     }
 
-    private void populateLocationUpdatesList(){
-        list = mydb.getAllLocationUpdatesData();
+    private void populateLocationUpdatesList(int activeBeatRouteId){
+        list = mydb.getAllLocationUpdatesDataForBeat(activeBeatRouteId);
     }
 
     private void populateVisitPendingCustomersList(int activeBeatRouteId){
@@ -150,7 +150,7 @@ public class ListCountersGeneric extends ListActivity {
     }
 
     private void populateAllCustomersList(int activeBeatRouteId){
-        list = mydb.getAllCustomerData(activeBeatRouteId);
+        list = mydb.getAllCustomerDataForBeat(activeBeatRouteId);
     }
 
 

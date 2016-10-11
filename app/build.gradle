@@ -22,4 +22,8 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:22.0.0'
+
+    compile 'com.facebook.stetho:stetho:1.4.1'
+    //If you want to add a network helper
+    compile 'com.facebook.stetho:stetho-okhttp:1.4.1'
 }

@@ -46,7 +46,7 @@ public class ServerUpdate extends AsyncTask<String, String, String> {
         mydb = new DBHelper(mContext);
         JSONArray custListArr = new JSONArray();
 
-        ArrayList<HashMap<String, String>> customerData = mydb.getAllCustomerData(activeBeatRouteId);
+        ArrayList<HashMap<String, String>> customerData = mydb.getAllCustomerDataForBeat(activeBeatRouteId);
 
 
         for(int i=0; i<customerData.size(); i++){

@@ -507,7 +507,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return array_list;
     }
 
-    public ArrayList<HashMap<String, String>> getAllCustomerData(int activeBeatRouteId)
+    public ArrayList<HashMap<String, String>> getAllCustomerDataForBeat(int activeBeatRouteId)
     {
         ArrayList<HashMap<String, String>> array_list = new ArrayList<HashMap<String, String>>();
 
@@ -560,13 +560,39 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
 
-    public ArrayList<HashMap<String, String>> getAllLocationUpdatesData()
+    public ArrayList<HashMap<String, String>> getAllLocationUpdateData()
     {
         ArrayList<HashMap<String, String>> array_list = new ArrayList<HashMap<String, String>>();
 
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery( "select * from location_update_requests order by customer_name asc", null );
+        res.moveToFirst();
+
+        while(res.isAfterLast() == false){
+            HashMap<String, String> hp = new HashMap<String, String>();
+            hp.put("customer_name", res.getString(res.getColumnIndex(CUSTOMER_COLUMN_NAME)));
+            hp.put("latitude", res.getString(res.getColumnIndex(CUSTOMER_COLUMN_LATITUDE)));
+            hp.put("longitude", res.getString(res.getColumnIndex(CUSTOMER_COLUMN_LONGITUDE)));
+            hp.put("date_updated", res.getString(res.getColumnIndex(CUSTOMER_COLUMN_DATE_UPDATED)));
+            hp.put("visit_status", res.getString(res.getColumnIndex(CUSTOMER_COLUMN_VISIT_STATUS)));
+            hp.put("reason", res.getString(res.getColumnIndex(CUSTOMER_COLUMN_REASON)));
+            hp.put("id", res.getString(res.getColumnIndex(COLUMN_ID)));
+            Log.d("DBHelper", "Loc update ID:" + res.getString(res.getColumnIndex(COLUMN_ID)) );
+            array_list.add(hp);
+            res.moveToNext();
+        }
+        return array_list;
+    }
+
+
+    public ArrayList<HashMap<String, String>> getAllLocationUpdatesDataForBeat(int beatId)
+    {
+        ArrayList<HashMap<String, String>> array_list = new ArrayList<HashMap<String, String>>();
+
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res =  db.rawQuery( "select * from location_update_requests where customer_name in (select customer_name from customer_details where beat_route_id = "+ beatId +" ) order by customer_name asc", null );
         res.moveToFirst();
 
         while(res.isAfterLast() == false){
@@ -620,7 +646,7 @@ public class DBHelper extends SQLiteOpenHelper {
         ArrayList<HashMap<String, String>> array_list = new ArrayList<HashMap<String, String>>();
 
         ArrayList<HashMap<String, String>> locationUpdatedList = new ArrayList<HashMap<String, String>>();
-        locationUpdatedList = getAllLocationUpdatesData();
+        locationUpdatedList = getAllLocationUpdatesDataForBeat(activeBeatRouteId);
         ArrayList<String> locationUpdateCustomerNameList = new ArrayList<String>();
         for(int i=0;i<locationUpdatedList.size(); i++){
             locationUpdateCustomerNameList.add(locationUpdatedList.get(i).get("customer_name"));

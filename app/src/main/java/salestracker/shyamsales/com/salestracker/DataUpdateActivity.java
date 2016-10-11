@@ -126,7 +126,7 @@ public class DataUpdateActivity extends ActionBarActivity {
 
 
         new AlertDialog.Builder(this)
-                .setTitle("Update Server")
+                .setTitle("Reload Mobile Data")
                 .setMessage("This will clear and reload the following data in this device:\n- Beat Routes\n- Customers\n- Clear all new customers\n- Clear all location updates")
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {

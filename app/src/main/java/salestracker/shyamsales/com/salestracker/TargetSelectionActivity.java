@@ -59,7 +59,7 @@ public class TargetSelectionActivity extends ListActivity {
             return;
         }
 
-        list = mydb.getAllCustomerData(activeBeatRouteId);
+        list = mydb.getAllCustomerDataForBeat(activeBeatRouteId);
 
         SimpleAdapter adapter = new SimpleAdapter(
                 this,

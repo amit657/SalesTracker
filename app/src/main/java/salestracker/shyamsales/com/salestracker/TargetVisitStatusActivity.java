@@ -55,7 +55,7 @@ public class TargetVisitStatusActivity extends ListActivity {
         }
 
         ArrayList<HashMap<String, String>> allTargetCustomerDetails = mydb.getAllTargetDataWithStatus(activeBeatRouteId);
-        ArrayList<HashMap<String, String>> locationUpdateDetails = mydb.getAllLocationUpdatesData();
+        ArrayList<HashMap<String, String>> locationUpdateDetails = mydb.getAllLocationUpdatesDataForBeat(activeBeatRouteId);
         ArrayList<String> locationUpdateCustomer = new ArrayList<String>();
 
         ArrayList<HashMap<String, String>> targetPenidngList = new ArrayList<HashMap<String, String>>();
