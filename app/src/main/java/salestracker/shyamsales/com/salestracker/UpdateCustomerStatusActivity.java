@@ -239,6 +239,8 @@ public class UpdateCustomerStatusActivity extends ActionBarActivity implements A
             mydb.updateVisitStatus(atv.getText().toString(), "NO_ORDER", reasonText);
             Toast.makeText(getBaseContext(), "Status updated for: " + atv.getText().toString(),
                     Toast.LENGTH_LONG).show();
+            finish();
+
         }else{
             float difference = storeLocation.distanceTo(currentLocation) - distanceRange;
             if(difference > 100000){
@@ -255,7 +257,9 @@ public class UpdateCustomerStatusActivity extends ActionBarActivity implements A
 
     public boolean checkLocationRange(Location locA, Location locB){
         float distance = locA.distanceTo(locB);
-
+        Log.d("SSM", "Distance between: " + distance + ", allowed distance range:" + distanceRange);
+        //Toast.makeText(getBaseContext(), "Distance between: " + distance + ", allowed distance range:" + distanceRange,
+               // Toast.LENGTH_LONG).show();
         if(distance < distanceRange){
             return true;
         }else{
@@ -282,8 +286,11 @@ public class UpdateCustomerStatusActivity extends ActionBarActivity implements A
         Location storeLocation = new Location("StoreLocation");
         storeLocation.setLatitude(Double.parseDouble(hm.get("latitude").toString()));
         storeLocation.setLongitude(Double.parseDouble(hm.get("longitude").toString()));
-
+        Log.d("SSM", "In Location update - checking if store is within range...");
         if(checkLocationRange(storeLocation, currentLocation)){
+            Log.d("SSM", "Store is within range!!!");
+            /*Toast.makeText(getBaseContext(), "Store is within range. Updating Status only...",
+                    Toast.LENGTH_LONG).show();*/
             statusUpdate();
             return;
         }
