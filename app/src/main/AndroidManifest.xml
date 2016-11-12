@@ -81,6 +81,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="salestracker.shyamsales.com.salestracker.MainActivity" />
         </activity>
+        <activity
+            android:name=".ListOrders"
+            android:label="@string/title_activity_list_orders"
+            android:parentActivityName=".MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="salestracker.shyamsales.com.salestracker.MainActivity" />
+        </activity>
     </application>
 
 </manifest>
