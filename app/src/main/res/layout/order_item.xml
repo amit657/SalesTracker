@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/order_item_row" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="3dp"
+        android:background="#BDBDBD">
+
+        <AutoCompleteTextView
+            android:id="@+id/sku_ac"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"/>
+        <EditText
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:ems="10"
+            android:id="@+id/qtyEt"
+            android:layout_below="@+id/sku_ac"
+            android:hint="Qty"/>
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Case"
+            android:id="@+id/caseUnitCb"
+            android:layout_marginLeft="100dp"
+            android:layout_marginTop="8dp"
+            android:layout_below="@+id/sku_ac"
+            android:layout_alignParentLeft="true"/>
+
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="X"
+            android:id="@+id/button10"
+            android:layout_below="@+id/sku_ac"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:onClick="removeOrderItem_Click"/>
+
+
+
+    </RelativeLayout>
+
+
+
+</merge>

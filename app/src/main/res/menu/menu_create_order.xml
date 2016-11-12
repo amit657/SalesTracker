@@ -4,4 +4,30 @@
     tools:context="salestracker.shyamsales.com.salestracker.CreateOrderActivity">
     <item android:id="@+id/action_settings" android:title="@string/action_settings"
         android:orderInCategory="100" app:showAsAction="never" />
+
+    <item
+        android:title="Save Order"
+        android:id="@+id/delete_order"
+        android:icon="@drawable/abc_ic_clear_mtrl_alpha"
+        android:orderInCategory="100"
+        app:showAsAction="always"
+        />
+
+    <item
+        android:title="Save Order"
+        android:id="@+id/save_order"
+        android:icon="@android:drawable/ic_menu_save"
+        android:orderInCategory="100"
+        app:showAsAction="always"
+        />
+
+    <item
+        android:title="Add Item"
+        android:id="@+id/add_order_item"
+        android:icon="@android:drawable/ic_input_add"
+        android:orderInCategory="100"
+        app:showAsAction="always"
+        />
+
+
 </menu>

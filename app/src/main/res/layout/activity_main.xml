@@ -39,7 +39,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dip"
             android:layout_marginRight="5dip"
-            android:text="SalesTracker"
+            android:text="SalesTracker (v .02-10.11)"
             android:textSize="20dip"
             android:layout_gravity="center_horizontal">
         </TextView>
@@ -162,6 +162,20 @@
             android:id="@+id/button2"
             android:layout_column="0"
             android:onClick="loadDataRefreshActivity"/>
+    </TableRow>
+
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:gravity="center_horizontal">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ORDERING"
+            android:id="@+id/button6"
+            android:layout_column="0"
+            android:onClick="loadOrderingActivity_Click"/>
     </TableRow>
 
 </TableLayout>

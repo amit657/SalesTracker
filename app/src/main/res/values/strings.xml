@@ -25,6 +25,7 @@
         <item>Expiry/Damage</item>
         <item>Store Closed</item>
         <item>Infilteration</item>
+        <item>Owner Not Present</item>
         <item>Others</item>
     </string-array>
     <string name="title_activity_add_new_customer">Add New Customer</string>
@@ -35,6 +36,7 @@
     <string name="title_activity_create_order">CreateOrderActivity</string>
     <string name="title_activity_target_selection">TargetSelectionActivity</string>
     <string name="title_activity_target_visit_status">TargetVisitStatusActivity</string>
+    <string name="title_activity_list_orders">ListOrders</string>
 
 
 </resources>
