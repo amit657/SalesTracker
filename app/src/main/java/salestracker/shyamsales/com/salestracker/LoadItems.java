@@ -25,7 +25,7 @@ import java.util.List;
  */
 public class LoadItems extends AsyncTask<String, String, String> {
 
-    public static final String TAG_CUST_ARR = "customer_list";
+    public static final String TAG_ITEM_ARR = "item_list";
     private DBHelper mydb;
 
     private String statusMessage = "ERROR";
@@ -53,23 +53,32 @@ public class LoadItems extends AsyncTask<String, String, String> {
         mydb = new DBHelper(mContext);
         JSONParser jParser = new JSONParser();
         try {
-            JSONObject json = jParser.makeHttpRequest(serviceURL, "GET", params);
-            Log.d("All items>>>>: ", json.toString());
+            JSONObject json = jParser.makeHttpRequest(serviceURL, "POST", params);
+            Log.d("All items >>>>: ", json.toString());
+            Log.d("All items >>>>: ", serviceURL);
             if (json != null) {
                 mydb.deleteAllItems();
                 try {
-                    JSONArray custList = json.getJSONArray(TAG_CUST_ARR);
+                    JSONArray custList = json.getJSONArray(TAG_ITEM_ARR);
+                    Log.d("LoadItem", "Cust list length: " +custList.length() );
                     for (int i = 0; i < custList.length(); i++) {
+
                         JSONObject cust = custList.getJSONObject(i);
-                        mydb.insertItem(cust.get("item_name").toString(), Float.parseFloat(cust.get("net_rate").toString()), Float.parseFloat(cust.get("tax").toString()), Float.parseFloat(cust.get("conversion").toString()), cust.get("primary_unit").toString(), cust.get("alternate_unit").toString(), Float.parseFloat(cust.get("margin").toString()), cust.get("pack_size").toString());
+                        //Log.d("LoadItem", "Inserting into DB " + cust.get("item_id").toString());
+                        //String itemId, String itemName, double netRate, double tax, double conversion, String primaryUnit, String alternateUnit, double margin, String packSize
+                        mydb.insertItem(cust.get("item_id").toString(), cust.get("item_name").toString(), Float.parseFloat(cust.get("net_rate").toString()), Float.parseFloat(cust.get("tax").toString()), Float.parseFloat(cust.get("conversion").toString()), cust.get("primary_unit").toString(), cust.get("alternate_unit").toString(), Float.parseFloat(cust.get("margin").toString()), cust.get("pack_size").toString());
                     }
+                    Log.d("LoadItem", "Setting status message to complete!");
                     statusMessage = "Refresh Complete!";
+
                 } catch (JSONException je) {
                     Log.d("ST-ERROR", "Error occurred when loading JSON data (Items) into DB.");
                     statusMessage = "Exception Occurred and Caught!";
+                    je.printStackTrace();
                 }
             }
         }catch(Exception e){
+            e.printStackTrace();
             //Toast.makeText(mContext, "Error occurred while loading customers.", Toast.LENGTH_LONG).show();
         }
 

@@ -38,6 +38,8 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String CUSTOMER_COLUMN_VISIT_STATUS = "visit_status";
     public static final String CUSTOMER_COLUMN_REASON = "reason";
     public static final String CUSTOMER_COLUMN_DATE_UPDATED = "date_updated";
+    public static final String CUSTOMER_COLUMN_ORDER_ID = "order_id";
+
     public static final String NEW_CUSTOMER_COLUMN_BEAT_ROUTE = "beat_route";
     public static final String COLUMN_ID = "id";
 
@@ -45,7 +47,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public DBHelper(Context context)
     {
-        super(context, DATABASE_NAME , null, 16);
+        super(context, DATABASE_NAME , null, 18);
     }
 
     @Override
@@ -53,7 +55,7 @@ public class DBHelper extends SQLiteOpenHelper {
         // TODO Auto-generated method stub
         db.execSQL(
                 "create table customer_details " +
-                        "(customer_name text primary key, address text, phone text, latitude text,longitude text, visit_status text, reason text, date_updated DATETIME, beat_route_id int)"
+                        "(customer_name text primary key, address text, phone text, latitude text,longitude text, visit_status text, reason text, date_updated DATETIME, beat_route_id int, order_id text)"
         );
 
         db.execSQL(
@@ -68,7 +70,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
         db.execSQL(
                 "CREATE TABLE IF NOT EXISTS item_master " +
-                        "(item_name text primary_key, net_rate real, tax number, conversion real, primary_unit text, alternate_unit text, margin real, pack_size text)"
+                        "(item_id text, item_name text primary_key, net_rate real, tax number, conversion real, primary_unit text, alternate_unit text, margin real, pack_size text)"
         );
 
         db.execSQL(
@@ -84,6 +86,11 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(
                 "CREATE TABLE IF NOT EXISTS salesman_master " +
                         "(salesman_id int primary_key, salesman_name text)"
+        );
+
+        db.execSQL(
+                "CREATE TABLE IF NOT EXISTS order_details " +
+                        "(order_id text, sku_name text, quantity number, unit text)"
         );
 
         /*db.execSQL(
@@ -104,8 +111,234 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS beat_route_master");
         db.execSQL("DROP TABLE IF EXISTS location_update_requests");
 
+        db.execSQL("DROP TABLE IF EXISTS order_details");
+
         onCreate(db);
     }
+
+    public ArrayList<HashMap<String, String>> getOrderedCustomersForBeat(int beatRouteId)
+    {
+        ArrayList<HashMap<String, String>> array_list = new ArrayList<HashMap<String, String>>();
+
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res =  db.rawQuery( "select * from customer_details where order_id != '' and beat_route_id = " + beatRouteId, null );
+        res.moveToFirst();
+
+        while(res.isAfterLast() == false){
+            HashMap<String, String> hp = new HashMap<String, String>();
+            hp.put("customer_name", res.getString(res.getColumnIndex(CUSTOMER_COLUMN_NAME)));
+            hp.put("address", res.getString(res.getColumnIndex(CUSTOMER_COLUMN_ADDRESS)));
+            hp.put("phone", res.getString(res.getColumnIndex(CUSTOMER_COLUMN_PHONE)));
+            hp.put("visit_status", res.getString(res.getColumnIndex(CUSTOMER_COLUMN_VISIT_STATUS)));
+            hp.put("date_updated", res.getString(res.getColumnIndex(CUSTOMER_COLUMN_DATE_UPDATED)));
+            hp.put("order_id", res.getString(res.getColumnIndex("order_id")));
+            Log.d("SSM", res.getString(res.getColumnIndex(CUSTOMER_COLUMN_NAME)));
+            array_list.add(hp);
+            res.moveToNext();
+        }
+        return array_list;
+    }
+
+
+
+    public ArrayList<HashMap<String, String>> getOrderDetails(String orderId){
+
+        ArrayList<HashMap<String, String>> array_list = new ArrayList<HashMap<String, String>>();
+
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res =  db.rawQuery( "select * from order_details where order_id ='"+ orderId +"'", null );
+        res.moveToFirst();
+
+        while(res.isAfterLast() == false){
+            HashMap<String, String> hp = new HashMap<String, String>();
+            hp.put("sku_name", res.getString(res.getColumnIndex("sku_name")));
+            hp.put("quantity", res.getString(res.getColumnIndex("quantity")));
+            hp.put("unit", res.getString(res.getColumnIndex("unit")));
+            //Log.d("SSM", res.getString(res.getColumnIndex(CUSTOMER_COLUMN_NAME)));
+            array_list.add(hp);
+            res.moveToNext();
+        }
+        return array_list;
+
+
+    }
+
+    public boolean insertOrder(String orderId, String customerName, ArrayList<HashMap<String, String>> order){
+        //check if customer was changed before saving
+        SQLiteDatabase db = this.getWritableDatabase();
+        String existingCustName = getCustomerForOrderId(orderId);
+        Log.d("MyDB", "Existing Cust Name:" + existingCustName);
+        if(existingCustName != null){
+            Log.d("DBHelper:insertOrder()", "Order already exist");
+
+            if(!existingCustName.equals(customerName)){
+                Log.d("DBHelper:insertOrder()", "Customer name modified for an existing order");
+                String eOrderId = getOrderIdForCustomer(customerName);
+                if(eOrderId != null){
+                    //order already exist for modified customer, no update can be performed, return
+                    return false;
+                }
+                //Customer modified
+                //remove order id from existing customer and set order_received to ''
+                ContentValues contentValues = new ContentValues();
+                //contentValues.put("customer_name", existingCustName);
+                contentValues.put("order_id", "");
+                contentValues.put("date_updated", getDateTime());
+                contentValues.put("visit_status", getDateTime());
+                db.update("customer_details", contentValues, "customer_name =  '" + existingCustName + "'", null );
+
+            }
+        }else{
+            //new entry insert details in customer_details table
+        }
+
+        //String existOrderId = getOrderIdForCustomer(customerName);
+
+        //if(existOrderId == null || existOrderId.equals("")){
+            //insert order_id into customer master
+
+            ContentValues contentValues = new ContentValues();
+            contentValues.put("customer_name", customerName);
+            contentValues.put("order_id", orderId);
+            contentValues.put("date_updated", getDateTime());
+            db.update("customer_details", contentValues, "customer_name =  '" + customerName + "'", null );
+
+        //}
+        deleteAllOrderItemsForOrderId(orderId);
+        for (HashMap<String, String> orderItem: order) {
+            // use currInstance
+            String skuName = orderItem.get("sku");
+            String unit = orderItem.get("unit");
+            int qty = Integer.parseInt(orderItem.get("qty"));
+
+            ContentValues contentValuesItems = new ContentValues();
+            contentValuesItems.put("order_id", orderId);
+            contentValuesItems.put("sku_name", skuName);
+            contentValuesItems.put("quantity", qty);
+            contentValuesItems.put("unit", unit);
+            Log.d("SSM", "Inserting into DB ID: " + orderId);
+            Log.d("DBHelper", "Inserting into DB: " + skuName);
+            Log.d("DBHelper", "Inserting into DB: " + qty);
+            Log.d("DBHelper", "Inserting into DB: " + unit);
+            db.insert("order_details", null, contentValuesItems);
+        }
+
+        return true;
+    }
+
+    public void deleteAllOrderItemsForOrderId(String orderId){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String stmt= "delete from order_details where order_id = '"+ orderId +"'";
+        //Log.d("deleteAllOrderItemsForOrderId", stmt);
+        db.execSQL(stmt);
+
+
+    }
+
+    public String getOrderIdForCustomer(String customerName){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res =  db.rawQuery( "select order_id from customer_details where customer_name='"+ customerName.replaceAll("'", "''") +"'", null );
+        String id = null;
+        if(!res.isAfterLast()){
+            res.moveToFirst();
+            id = res.getString(res.getColumnIndex("order_id"));
+        }
+
+        return id;
+    }
+
+    public String getCustomerForOrderId(String orderId){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res =  db.rawQuery( "select customer_name from customer_details where order_id='"+ orderId.replaceAll("'", "''") +"'", null );
+        String cust = null;
+        if(!res.isAfterLast()){
+            res.moveToFirst();
+            cust = res.getString(res.getColumnIndex("customer_name"));
+        }
+
+        return cust;
+    }
+
+    public void removeOrderForCustomer(String customerName){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res =  db.rawQuery("select order_id from customer_details where customer_name='"+ customerName.replaceAll("'", "''") +"'", null );
+        String orderId = null;
+        if(!res.isAfterLast()){
+            res.moveToFirst();
+            orderId = res.getString(res.getColumnIndex("order_id"));
+        }
+
+
+        if(orderId != null){
+            ContentValues contentValues = new ContentValues();
+            contentValues.put("customer_name", customerName);
+            contentValues.put("order_id", "");
+            contentValues.put("visit_status", "");
+            contentValues.put("date_updated", "");
+            db.update("customer_details", contentValues, "customer_name =  '" + customerName + "'", null );
+
+            String stmt= "delete from order_details where order_id = '"+ orderId +"'";
+            db.execSQL(stmt);
+
+
+        }
+
+    }
+
+    public HashMap getItemInfoForItemName(String item_name){
+/*
+        CREATE TABLE IF NOT EXISTS item_master " +
+        "(item_name text primary_key, net_rate real, tax number, conversion real, primary_unit text, alternate_unit text, margin real, pack_size text)"
+
+      */
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res =  db.rawQuery( "select * from item_master where item_name='"+ item_name.replaceAll("'", "''") +"'", null );
+        HashMap hm = new HashMap();
+        res.moveToFirst();
+        System.out.println("=================>>>>> " + res.getString(1));
+        hm.put("item_id", res.getString(res.getColumnIndex("item_id")));
+        hm.put("item_name", res.getString(res.getColumnIndex("item_name")));
+        hm.put("net_rate", res.getFloat(res.getColumnIndex("net_rate")));
+        hm.put("tax", res.getFloat(res.getColumnIndex("tax")));
+        hm.put("conversion", res.getFloat(res.getColumnIndex("conversion")));
+        hm.put("primary_unit", res.getString(res.getColumnIndex("primary_unit")));
+        hm.put("alternate_unit", res.getString(res.getColumnIndex("alternate_unit")));
+        hm.put("margin", res.getFloat(res.getColumnIndex("margin")));
+        hm.put("pack_size", res.getString(res.getColumnIndex("pack_size")));
+
+        //System.out.println(res.getString(1));
+        return hm;
+    }
+
+    public HashMap getItemInfoForId(String itemId){
+/*
+        CREATE TABLE IF NOT EXISTS item_master " +
+        "(item_name text primary_key, net_rate real, tax number, conversion real, primary_unit text, alternate_unit text, margin real, pack_size text)"
+
+      */
+//item_id text, item_name text primary_key, net_rate real, tax number, conversion real, primary_unit text, alternate_unit text, margin real, pack_size text
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res =  db.rawQuery( "select * from item_master where item_id='"+ itemId.replaceAll("'", "''") +"'", null );
+        HashMap hm = new HashMap();
+        res.moveToFirst();
+        System.out.println("=================>>>>> " + res.getString(1));
+        hm.put("item_id", res.getString(0));
+        hm.put("item_name", res.getString(1));
+        hm.put("net_rate", res.getFloat(2));
+        hm.put("tax", res.getFloat(3));
+        hm.put("conversion", res.getFloat(4));
+        hm.put("primary_unit", res.getString(5));
+        hm.put("alternate_unit", res.getString(6));
+        hm.put("margin", res.getFloat(7));
+        hm.put("pack_size", res.getString(8));
+
+        //System.out.println(res.getString(1));
+        return hm;
+    }
+
 
     public boolean insertCustomerIntoTarget(String customer, int beatRouteId){
         SQLiteDatabase db = this.getWritableDatabase();
@@ -235,10 +468,11 @@ public class DBHelper extends SQLiteOpenHelper {
         return true;
     }
 
-    public boolean insertItem  (String itemName, double netRate, double tax, double conversion, String primaryUnit, String alternateUnit, double margin, String packSize)
+    public boolean insertItem  (String itemId, String itemName, double netRate, double tax, double conversion, String primaryUnit, String alternateUnit, double margin, String packSize)
     {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
+        contentValues.put("item_id", itemId);
         contentValues.put("item_name", itemName);
         contentValues.put("net_rate", netRate);
         contentValues.put("tax", tax);
@@ -526,6 +760,8 @@ public class DBHelper extends SQLiteOpenHelper {
             hp.put("visit_status", res.getString(res.getColumnIndex(CUSTOMER_COLUMN_VISIT_STATUS)));
             hp.put("reason", res.getString(res.getColumnIndex(CUSTOMER_COLUMN_REASON)));
             hp.put("date_updated", res.getString(res.getColumnIndex(CUSTOMER_COLUMN_DATE_UPDATED)));
+            hp.put("order_id", res.getString(res.getColumnIndex(CUSTOMER_COLUMN_ORDER_ID)));
+
             Log.d("SSM", res.getString(res.getColumnIndex(CUSTOMER_COLUMN_NAME)));
             array_list.add(hp);
             res.moveToNext();

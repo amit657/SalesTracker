@@ -62,6 +62,7 @@ public class ServerUpdate extends AsyncTask<String, String, String> {
                 custData.put("reason", hm.get("reason"));
                 custData.put("date_updated", hm.get("date_updated"));
                 custData.put("salesman", salesman);
+                custData.put("order_id", hm.get("order_id"));
                 custListArr.put(custData);
             }catch(JSONException je){
                 je.printStackTrace();

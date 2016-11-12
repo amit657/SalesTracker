@@ -138,6 +138,7 @@ public class DataUpdateActivity extends ActionBarActivity {
                         new LoadBeatRoutes(DataUpdateActivity.this, et.getText().toString()).execute();
                         new LoadSalesman(DataUpdateActivity.this, et.getText().toString()).execute();
                         new LoadCustomers(DataUpdateActivity.this,et.getText().toString()).execute();
+                        new LoadItems(DataUpdateActivity.this,et.getText().toString()).execute();
                         mydb.deleteAllNewCustomerData();
                         mydb.deleteAllLocationUpdateRequests();
 
@@ -165,7 +166,7 @@ public class DataUpdateActivity extends ActionBarActivity {
 
         new AlertDialog.Builder(this)
                 .setTitle("Update Server")
-                .setMessage("This will send the following data to server:\n- Customer Visit Status\n- New Customers\n- Location Updates")
+                .setMessage("This will send the following data to server:\n- Customer Visit Status\n- New Customers\n- Location Updates\n- Orders")
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 
@@ -176,7 +177,7 @@ public class DataUpdateActivity extends ActionBarActivity {
                         new ServerUpdate(DataUpdateActivity.this, pref.getString("serverHost", null), pref.getString("salesman", null), beatRoute).execute();
                         new ServerUpdateNewCustomers(DataUpdateActivity.this, pref.getString("serverHost", null)).execute();
                         new ServerUpdateLocationUpdates(DataUpdateActivity.this, pref.getString("serverHost", null), pref.getString("salesman", null)).execute();
-
+                        new ServerUpdateOrders(DataUpdateActivity.this, pref.getString("serverHost", null), beatRoute).execute();
                     }})
                 .setNegativeButton(android.R.string.no, null).show();
 

@@ -77,9 +77,9 @@ public class MainActivity extends Activity{
     }
 */
     public void loadOrderingActivity_Click(View view){
-        //Intent intent = new Intent(this, CreateOrderActivity.class);
-        Intent intent = new Intent(this, TargetSelectionActivity.class);
-        intent.putExtra("ListType", "VisitPendingCustomersList");
+        Intent intent = new Intent(this, CreateOrderActivity.class);
+        //Intent intent = new Intent(this, TargetSelectionActivity.class);
+        //intent.putExtra("orderId", "9fe54682-35c7-4a0b-8c65-d8b8d7b8c38d");
         startActivity(intent);
     }
 
@@ -96,7 +96,7 @@ public class MainActivity extends Activity{
 
 
     public void showListCustomersOptions_Click(View view){
-        CharSequence colors[] = new CharSequence[] {"New Customers", "Visited Customers", "Location Updates", "", "All Customers", "Pending Visit", "Pending Target", "Nearby Customers"};
+        CharSequence colors[] = new CharSequence[] {"New Customers", "Visited Customers", "Location Updates", "", "All Customers", "Pending Visit", "Pending Target", "Nearby Customers", "Orders"};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Select list type");
@@ -136,6 +136,10 @@ public class MainActivity extends Activity{
                 if(position == 7){
                     Intent intent = new Intent(MainActivity.this, ListCountersGeneric.class);
                     intent.putExtra("ListType", "NearbyCustomersList");
+                    startActivity(intent);
+                }
+                if(position == 8){
+                    Intent intent = new Intent(MainActivity.this, ListOrders.class);
                     startActivity(intent);
                 }
                 // the user clicked on colors[which]
