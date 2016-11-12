@@ -39,7 +39,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dip"
             android:layout_marginRight="5dip"
-            android:text="SalesTracker (v .02-10.11)"
+            android:text="SalesTracker (v .03-12.11)"
             android:textSize="20dip"
             android:layout_gravity="center_horizontal">
         </TextView>
@@ -57,7 +57,8 @@
             android:id="@+id/button"
             android:layout_column="0"
             android:onClick="loadCustomerStatusUpdate"
-            android:layout_marginTop="10dp" />
+            android:layout_marginTop="10dp"
+            android:background="@android:color/holo_purple" />
     </TableRow>
 
     <TableRow
@@ -132,7 +133,8 @@
             android:text="LIST CUSTOMERS...."
             android:id="@+id/button5"
             android:layout_column="0"
-            android:onClick="showListCustomersOptions_Click"/>
+            android:onClick="showListCustomersOptions_Click"
+            android:background="@android:color/holo_green_light" />
     </TableRow>
 
     <TableRow
@@ -175,7 +177,8 @@
             android:text="ORDERING"
             android:id="@+id/button6"
             android:layout_column="0"
-            android:onClick="loadOrderingActivity_Click"/>
+            android:onClick="loadOrderingActivity_Click"
+            android:background="@android:color/holo_blue_light" />
     </TableRow>
 
 </TableLayout>
