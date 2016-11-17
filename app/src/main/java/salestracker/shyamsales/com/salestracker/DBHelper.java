@@ -274,9 +274,9 @@ public class DBHelper extends SQLiteOpenHelper {
         if(orderId != null){
             ContentValues contentValues = new ContentValues();
             contentValues.put("customer_name", customerName);
-            contentValues.put("order_id", "");
-            contentValues.put("visit_status", "");
-            contentValues.put("date_updated", "");
+            contentValues.putNull("order_id");
+            contentValues.putNull("visit_status");
+            contentValues.putNull("date_updated");
             db.update("customer_details", contentValues, "customer_name =  '" + customerName + "'", null );
 
             String stmt= "delete from order_details where order_id = '"+ orderId +"'";

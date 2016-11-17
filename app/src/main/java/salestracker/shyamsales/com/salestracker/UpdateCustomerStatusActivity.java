@@ -35,7 +35,7 @@ public class UpdateCustomerStatusActivity extends ActionBarActivity implements A
     AutoCompleteTextView textView=null;
     private ArrayAdapter<String> adapter;
 
-    private int distanceRange = 50;
+    private int distanceRange = 120;
     //These values show in autocomplete
     String item[];/*={
             "January", "February", "March", "April",

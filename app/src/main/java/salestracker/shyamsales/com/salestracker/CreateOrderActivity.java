@@ -51,7 +51,7 @@ public class CreateOrderActivity extends ActionBarActivity implements AdapterVie
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_order);
-
+        setTitle("Create Order");
         this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mydb = new DBHelper(this);
