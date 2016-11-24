@@ -47,7 +47,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public DBHelper(Context context)
     {
-        super(context, DATABASE_NAME , null, 18);
+        super(context, DATABASE_NAME , null, 19);
     }
 
     @Override
@@ -70,7 +70,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
         db.execSQL(
                 "CREATE TABLE IF NOT EXISTS item_master " +
-                        "(item_id text, item_name text primary_key, net_rate real, tax number, conversion real, primary_unit text, alternate_unit text, margin real, pack_size text)"
+                        "(item_id text, item_name text primary_key, mrp real, net_rate real, tax number, conversion real, primary_unit text, alternate_unit text, margin real, pack_size text, brand text)"
         );
 
         db.execSQL(
@@ -301,6 +301,7 @@ public class DBHelper extends SQLiteOpenHelper {
         System.out.println("=================>>>>> " + res.getString(1));
         hm.put("item_id", res.getString(res.getColumnIndex("item_id")));
         hm.put("item_name", res.getString(res.getColumnIndex("item_name")));
+        hm.put("mrp", res.getFloat(res.getColumnIndex("mrp")));
         hm.put("net_rate", res.getFloat(res.getColumnIndex("net_rate")));
         hm.put("tax", res.getFloat(res.getColumnIndex("tax")));
         hm.put("conversion", res.getFloat(res.getColumnIndex("conversion")));
@@ -468,12 +469,13 @@ public class DBHelper extends SQLiteOpenHelper {
         return true;
     }
 
-    public boolean insertItem  (String itemId, String itemName, double netRate, double tax, double conversion, String primaryUnit, String alternateUnit, double margin, String packSize)
+    public boolean insertItem  (String itemId, String itemName, double mrp, double netRate, double tax, double conversion, String primaryUnit, String alternateUnit, double margin, String packSize)
     {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put("item_id", itemId);
         contentValues.put("item_name", itemName);
+        contentValues.put("mrp", mrp);
         contentValues.put("net_rate", netRate);
         contentValues.put("tax", tax);
         contentValues.put("conversion", conversion);

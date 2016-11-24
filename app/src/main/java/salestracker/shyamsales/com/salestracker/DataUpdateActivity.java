@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.os.Environment;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -31,6 +32,7 @@ import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -141,6 +143,11 @@ public class DataUpdateActivity extends ActionBarActivity {
                         new LoadItems(DataUpdateActivity.this,et.getText().toString()).execute();
                         mydb.deleteAllNewCustomerData();
                         mydb.deleteAllLocationUpdateRequests();
+
+                        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath(),"salesTrackerDir");
+                        File gpxfile = new File(file, "Log.txt");
+                        boolean deleted = gpxfile.delete();
+
 
                     }})
                 .setNegativeButton(android.R.string.no, null).show();

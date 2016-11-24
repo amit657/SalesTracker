@@ -1,10 +1,12 @@
 package salestracker.shyamsales.com.salestracker;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.os.Environment;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -30,7 +32,12 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -334,6 +341,15 @@ public class CreateOrderActivity extends ActionBarActivity implements AdapterVie
         Log.d("SAVE","---------- Starting Loop ---------------");
         ArrayList<HashMap<String, String>> orderItems = new ArrayList<HashMap<String, String>>();
         float totalAmount = 0;
+
+        Calendar c = Calendar.getInstance();
+        System.out.println("Current time => "+c.getTime());
+
+        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        String formattedDate = df.format(c.getTime());
+
+
+        StringBuilder logBody = new StringBuilder("\n\n####### SAVE - "+ formattedDate +" ######\n===> " + customerName + " <====");
         for (int i = 1; i < table_layout.getChildCount(); i++) {
             View parentRow = table_layout.getChildAt(i);
             if(parentRow instanceof TableRow){
@@ -362,12 +378,15 @@ public class CreateOrderActivity extends ActionBarActivity implements AdapterVie
                     hm.put("qty", qtyStr);
                     hm.put("unit", unit);
                     orderItems.add(hm);
+                    logBody.append("\nCustomer: " + customerName + " Item: " + skuName + ", Qty: " + qtyStr + " Unit: " + unit);
                     Log.d("saveOrder()", "Added to order list: " + skuName + "   " + qtyStr + "   " + unit + " is checkbox selected:" + caseCb.isChecked());
                 }
             }
 
         }
         updateTitleText();
+
+        writeFileOnInternalStorage(this, logBody.toString());
 
         if(orderItems.size() == 0){
             Toast.makeText(getBaseContext(), "Nothing to save!",
@@ -382,8 +401,33 @@ public class CreateOrderActivity extends ActionBarActivity implements AdapterVie
         }else{
             mydb.updateVisitStatus(customerName, "ORDER_RECEIVED", "");
             Toast.makeText(getBaseContext(), "Saved!",
-                    Toast.LENGTH_LONG).show();
+                    Toast.LENGTH_SHORT).show();
             return true;
+        }
+    }
+
+    public void writeFileOnInternalStorage(Context mcoContext, String sBody){
+        //File file = new File(mcoContext.getFilesDir(),"salesTrackerDir");
+        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath(),"salesTrackerDir");
+        //File file = new File(mcoContext.getCacheDir(),"salesTrackerDir");
+
+        if(!file.exists()){
+            file.mkdir();
+            Log.d("Logging", "Log directory does not exist, creating a new one...");
+        }
+
+        try{
+            File gpxfile = new File(file, "Log.txt");
+            FileWriter writer = new FileWriter(gpxfile, true);
+            writer.append(sBody);
+            writer.flush();
+            writer.close();
+            /*Toast.makeText(getBaseContext(), "Saved in: " + file.getAbsolutePath(),
+                    Toast.LENGTH_LONG).show();*/
+            Log.d("Logging: ", "Saved in: " + file.getAbsolutePath());
+
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 
@@ -430,6 +474,42 @@ public class CreateOrderActivity extends ActionBarActivity implements AdapterVie
         table_layout.removeView(parent);
         updateTitleText();
     }
+
+
+    public void displayItemInfo_Click(View v){
+
+        final TableRow parent = (TableRow) v.getParent().getParent();
+
+        AutoCompleteTextView skuTv = (AutoCompleteTextView) parent.findViewById(R.id.sku_ac);
+        String tSkuName = skuTv.getText().toString();
+        if(tSkuName.equals("")){
+            return;
+        }
+
+        HashMap itemHm = mydb.getItemInfoForItemName(tSkuName);
+        Float rate = (Float) itemHm.get("net_rate");
+        Float mrp = (Float) itemHm.get("mrp");
+
+
+        new AlertDialog.Builder(CreateOrderActivity.this)
+                .setTitle(skuTv.getText())
+                .setMessage("Net Rate: " + rate + "\nMRP: " +mrp )
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int whichButton) {
+
+
+
+                    }}).show();
+
+
+        /*Toast.makeText(getBaseContext(), skuTv.getText(),
+                Toast.LENGTH_LONG).show();*/
+        //updateTitleText();
+    }
+
+
 
 
     @Override

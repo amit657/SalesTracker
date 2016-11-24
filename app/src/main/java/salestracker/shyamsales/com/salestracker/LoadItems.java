@@ -64,9 +64,9 @@ public class LoadItems extends AsyncTask<String, String, String> {
                     for (int i = 0; i < custList.length(); i++) {
 
                         JSONObject cust = custList.getJSONObject(i);
-                        //Log.d("LoadItem", "Inserting into DB " + cust.get("item_id").toString());
+                        Log.d("LoadItem", "Inserting into DB " + cust.get("item_id").toString() +" - "+Float.parseFloat(cust.get("mrp").toString()));
                         //String itemId, String itemName, double netRate, double tax, double conversion, String primaryUnit, String alternateUnit, double margin, String packSize
-                        mydb.insertItem(cust.get("item_id").toString(), cust.get("item_name").toString(), Float.parseFloat(cust.get("net_rate").toString()), Float.parseFloat(cust.get("tax").toString()), Float.parseFloat(cust.get("conversion").toString()), cust.get("primary_unit").toString(), cust.get("alternate_unit").toString(), Float.parseFloat(cust.get("margin").toString()), cust.get("pack_size").toString());
+                        mydb.insertItem(cust.get("item_id").toString(), cust.get("item_name").toString(), Float.parseFloat(cust.get("mrp").toString()), Float.parseFloat(cust.get("net_rate").toString()), Float.parseFloat(cust.get("tax").toString()), Float.parseFloat(cust.get("conversion").toString()), cust.get("primary_unit").toString(), cust.get("alternate_unit").toString(), Float.parseFloat(cust.get("margin").toString()), cust.get("pack_size").toString());
                     }
                     Log.d("LoadItem", "Setting status message to complete!");
                     statusMessage = "Refresh Complete!";
