@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import android.os.Environment;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -86,12 +87,12 @@ public class DataUpdateActivity extends ActionBarActivity {
 
 
     }
-
+/*
     public void loadBeatRoutesFromServer(View view){
         EditText et = (EditText) findViewById(R.id.serverHostEt);
         new LoadBeatRoutes(this, et.getText().toString()).execute();
     }
-
+*/
     public void updateServerHost(View view){
         EditText et = (EditText) findViewById(R.id.serverHostEt);
         SharedPreferences pref = getApplicationContext().getSharedPreferences("SalesTrackerPref", MODE_PRIVATE);
@@ -126,31 +127,41 @@ public class DataUpdateActivity extends ActionBarActivity {
         */
 
 
+        final EditText input = new EditText(this);
+// Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+        input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+
 
         new AlertDialog.Builder(this)
                 .setTitle("Reload Mobile Data")
-                .setMessage("This will clear and reload the following data in this device:\n- Beat Routes\n- Customers\n- Clear all new customers\n- Clear all location updates")
+                .setMessage("This will clear and reload the following data in this device:\n- Beat Routes\n- Customers\n- Clear all new customers\n- Clear all location updates\n\nTo continue type 'yes' below:")
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 
                     public void onClick(DialogInterface dialog, int whichButton) {
+                        String validateText = input.getText().toString();
+                        if(validateText.equalsIgnoreCase("yes")){
+                            EditText et = (EditText) findViewById(R.id.serverHostEt);
+                            Log.d("SSM", "Server Host: " + et.getText().toString());
+                            new LoadBeatRoutes(DataUpdateActivity.this, et.getText().toString()).execute();
+                            new LoadSalesman(DataUpdateActivity.this, et.getText().toString()).execute();
+                            new LoadCustomers(DataUpdateActivity.this, et.getText().toString()).execute();
+                            new LoadItems(DataUpdateActivity.this, et.getText().toString()).execute();
+                            mydb.deleteAllNewCustomerData();
+                            mydb.deleteAllLocationUpdateRequests();
+                        }else{
+                            input.setText("");
+                        }
 
-                        EditText et = (EditText) findViewById(R.id.serverHostEt);
-                        Log.d("SSM","Server Host: " + et.getText().toString());
-                        new LoadBeatRoutes(DataUpdateActivity.this, et.getText().toString()).execute();
-                        new LoadSalesman(DataUpdateActivity.this, et.getText().toString()).execute();
-                        new LoadCustomers(DataUpdateActivity.this,et.getText().toString()).execute();
-                        new LoadItems(DataUpdateActivity.this,et.getText().toString()).execute();
-                        mydb.deleteAllNewCustomerData();
-                        mydb.deleteAllLocationUpdateRequests();
 
-                        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath(),"salesTrackerDir");
+                        /*File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath(),"salesTrackerDir");
                         File gpxfile = new File(file, "Log.txt");
-                        boolean deleted = gpxfile.delete();
+                        boolean deleted = gpxfile.delete();*/
 
 
-                    }})
-                .setNegativeButton(android.R.string.no, null).show();
+                    }
+                })
+                .setNegativeButton(android.R.string.no, null).setView(input).show();
 
 
 

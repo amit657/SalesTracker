@@ -39,6 +39,7 @@ public class LoadSalesman extends AsyncTask<String, String, String> {
     @Override
     protected void onPreExecute() {
         dialog.setTitle("Downloading Salesman");
+        dialog.setCanceledOnTouchOutside(false);
         dialog.show();
     }
 

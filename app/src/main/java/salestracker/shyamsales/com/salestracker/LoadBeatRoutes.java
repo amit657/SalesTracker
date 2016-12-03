@@ -46,6 +46,7 @@ public class LoadBeatRoutes extends AsyncTask<String, String, String> {
     @Override
     protected void onPreExecute() {
         dialog.setTitle("Downloading Beat Routes");
+        dialog.setCanceledOnTouchOutside(false);
         dialog.show();
     }
 

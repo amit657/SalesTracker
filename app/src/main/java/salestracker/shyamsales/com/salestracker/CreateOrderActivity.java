@@ -37,6 +37,7 @@ import java.io.FileWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.UUID;
@@ -411,13 +412,20 @@ public class CreateOrderActivity extends ActionBarActivity implements AdapterVie
         File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath(),"salesTrackerDir");
         //File file = new File(mcoContext.getCacheDir(),"salesTrackerDir");
 
+
+        Date dNow = new Date();
+        SimpleDateFormat ft = new SimpleDateFormat ("dd-MM-yyyy");
+
+        //System.out.println("Current Date: " + ft.format(dNow));
+        String logFileName = "Log-" + ft.format(dNow) + ".txt";
+
         if(!file.exists()){
             file.mkdir();
             Log.d("Logging", "Log directory does not exist, creating a new one...");
         }
 
         try{
-            File gpxfile = new File(file, "Log.txt");
+            File gpxfile = new File(file, logFileName);
             FileWriter writer = new FileWriter(gpxfile, true);
             writer.append(sBody);
             writer.flush();

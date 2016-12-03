@@ -47,23 +47,6 @@
             android:background="#6ca6de2f" />
     </TableRow>
 
-    <TableRow android:gravity="center_horizontal">
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="REFRESH MOBILE DATA"
-            android:id="@+id/button6"
-            android:layout_column="0"
-            android:onClick="refreshMobileData"
-            android:layout_marginTop="20dp"
-            android:background="#5cfe2200"
-            android:elevation="@dimen/abc_action_bar_default_height_material" />
-
-    </TableRow>
-
-
-
-
 <!--
     <TableRow android:gravity="center_horizontal">
 
@@ -77,17 +60,7 @@
             android:layout_marginTop="20dp" />
     </TableRow>
 -->
-    <TableRow android:gravity="center_horizontal">
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="LOAD BEAT ROUTES FROM SERVER"
-            android:id="@+id/button9"
-            android:layout_column="0"
-            android:onClick="loadBeatRoutesFromServer"
-            android:layout_marginTop="20dp" />
-    </TableRow>
 
     <TableRow android:gravity="center_horizontal">
 
@@ -97,7 +70,7 @@
             android:text="Server Host"
             android:id="@+id/textView6"
             android:layout_column="0"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="40dp"
             android:textSize="20dp" />
     </TableRow>
 
@@ -119,6 +92,20 @@
             android:id="@+id/button13"
             android:layout_column="0"
             android:onClick="updateServerHost" />
+    </TableRow>
+
+    <TableRow android:gravity="center_horizontal">
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="REFRESH MOBILE DATA"
+            android:id="@+id/button6"
+            android:layout_column="0"
+            android:onClick="refreshMobileData"
+            android:layout_marginTop="80dp"
+            android:background="#5cfe2200"
+            android:elevation="@dimen/abc_action_bar_default_height_material" />
+
     </TableRow>
 
 
