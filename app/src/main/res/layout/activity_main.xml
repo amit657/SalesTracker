@@ -39,7 +39,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dip"
             android:layout_marginRight="5dip"
-            android:text="SalesTracker (v .03-03.12)"
+            android:text="SalesTracker (v .03-07.12)"
             android:textSize="20dip"
             android:layout_gravity="center_horizontal">
         </TextView>

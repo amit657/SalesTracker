@@ -25,13 +25,20 @@ public class ListOrders extends ListActivity {
     private DBHelper mydb;
 
     String activeBeatRouteName;
-
+    private boolean isEditMode = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_orders);
 
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            isEditMode = extras.getBoolean("isEditMode");
+        }else{
+            Toast.makeText(getBaseContext(), "isEditModeParam not received!!.",
+                    Toast.LENGTH_LONG).show();
+        }
 
         mydb = new DBHelper(this);
         loadListView();
@@ -117,7 +124,13 @@ public class ListOrders extends ListActivity {
 
         Log.d("SSM", "Clicked! "+ position + " Value: " + list.get(position));
         HashMap<String, String> hm = list.get(position);
-        Intent intent = new Intent(this, CreateOrderActivity.class);
+        Intent intent;
+        if(isEditMode){
+            intent = new Intent(this, CreateOrderActivity.class);
+        }else{
+            intent = new Intent(this, ViewOrderActivity.class);
+        }
+
         //Intent intent = new Intent(this, TargetSelectionActivity.class);
         intent.putExtra("orderId", hm.get("order_id"));
         startActivity(intent);

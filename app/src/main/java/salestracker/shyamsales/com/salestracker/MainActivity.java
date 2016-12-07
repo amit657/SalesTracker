@@ -96,7 +96,7 @@ public class MainActivity extends Activity{
 
 
     public void showListCustomersOptions_Click(View view){
-        CharSequence colors[] = new CharSequence[] {"New Customers", "Visited Customers", "Location Updates", "", "All Customers", "Pending Visit", "Pending Target", "Nearby Customers", "Orders"};
+        CharSequence colors[] = new CharSequence[] {"New Customers", "Visited Customers", "Location Updates", "", "All Customers", "Pending Visit", "Pending Target", "Nearby Customers", "View Orders", "Edit Orders"};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Select list type");
@@ -140,6 +140,12 @@ public class MainActivity extends Activity{
                 }
                 if(position == 8){
                     Intent intent = new Intent(MainActivity.this, ListOrders.class);
+                    intent.putExtra("isEditMode", false);
+                    startActivity(intent);
+                }
+                if(position == 9){
+                    Intent intent = new Intent(MainActivity.this, ListOrders.class);
+                    intent.putExtra("isEditMode", true);
                     startActivity(intent);
                 }
                 // the user clicked on colors[which]
