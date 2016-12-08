@@ -550,9 +550,21 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery( "select * from customer_details where customer_name='"+ customer_name.replaceAll("'", "''") +"'", null );
         System.out.println(">>>>>>>>>>>>>>>> select * from customer_details where customer_name='"+ customer_name +"'");
-        HashMap hm = new HashMap();
+        HashMap hp = new HashMap();
         res.moveToFirst();
         System.out.println("=================>>>>> " + res.getString(1));
+
+        hp.put("customer_name", res.getString(res.getColumnIndex(CUSTOMER_COLUMN_NAME)));
+        hp.put("address", res.getString(res.getColumnIndex(CUSTOMER_COLUMN_ADDRESS)));
+        hp.put("phone", res.getString(res.getColumnIndex(CUSTOMER_COLUMN_PHONE)));
+        hp.put("latitude", res.getString(res.getColumnIndex(CUSTOMER_COLUMN_LATITUDE)));
+        hp.put("longitude", res.getString(res.getColumnIndex(CUSTOMER_COLUMN_LONGITUDE)));
+        hp.put("visit_status", res.getString(res.getColumnIndex(CUSTOMER_COLUMN_VISIT_STATUS)));
+        hp.put("reason", res.getString(res.getColumnIndex(CUSTOMER_COLUMN_REASON)));
+        hp.put("date_updated", res.getString(res.getColumnIndex(CUSTOMER_COLUMN_DATE_UPDATED)));
+        hp.put("order_id", res.getString(res.getColumnIndex(CUSTOMER_COLUMN_ORDER_ID)));
+
+        /*
         hm.put("customer_name", res.getString(0));
         hm.put("address", res.getString(1));
         hm.put("phone", res.getString(2));
@@ -560,10 +572,10 @@ public class DBHelper extends SQLiteOpenHelper {
         hm.put("longitude", res.getDouble(4));
         hm.put("visit_status", res.getString(5));
         hm.put("reason", res.getString(6));
-
+        hm.put("date_updated", res.getString(7));*/
 
         //System.out.println(res.getString(1));
-        return hm;
+        return hp;
     }
 
 /*

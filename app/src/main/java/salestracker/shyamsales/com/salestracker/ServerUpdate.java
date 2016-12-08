@@ -43,14 +43,37 @@ public class ServerUpdate extends AsyncTask<String, String, String> {
 
     protected String doInBackground(String... args) {
 
-        mydb = new DBHelper(mContext);
         JSONArray custListArr = new JSONArray();
+        mydb = new DBHelper(mContext);
 
-        ArrayList<HashMap<String, String>> customerData = mydb.getAllCustomerDataForBeat(activeBeatRouteId);
+        if(args.length == 0) {
+            ArrayList<HashMap<String, String>> customerData = mydb.getAllCustomerDataForBeat(activeBeatRouteId);
 
 
-        for(int i=0; i<customerData.size(); i++){
-            HashMap hm = customerData.get(i);
+            for (int i = 0; i < customerData.size(); i++) {
+                HashMap hm = customerData.get(i);
+                JSONObject custData = new JSONObject();
+                try {
+                    custData.put("customer_name", hm.get("customer_name"));
+                    custData.put("address", hm.get("address"));
+                    custData.put("phone", hm.get("phone"));
+                    custData.put("latitude", hm.get("latitude"));
+                    custData.put("longitude", hm.get("longitude"));
+                    custData.put("visit_status", hm.get("visit_status"));
+                    custData.put("reason", hm.get("reason"));
+                    custData.put("date_updated", hm.get("date_updated"));
+                    custData.put("salesman", salesman);
+                    custData.put("order_id", hm.get("order_id"));
+                    custListArr.put(custData);
+                } catch (JSONException je) {
+                    je.printStackTrace();
+                }
+            }
+        }else{
+            String custName = args[0];
+            Log.d("Server Update", "Uploading order for customer - " + custName);
+
+            HashMap<String, String> hm = mydb.getCustomerInfo(custName);
             JSONObject custData = new JSONObject();
             try {
                 custData.put("customer_name", hm.get("customer_name"));
@@ -64,11 +87,10 @@ public class ServerUpdate extends AsyncTask<String, String, String> {
                 custData.put("salesman", salesman);
                 custData.put("order_id", hm.get("order_id"));
                 custListArr.put(custData);
-            }catch(JSONException je){
+            } catch (JSONException je) {
                 je.printStackTrace();
             }
         }
-
         Log.d("Sending to server", custListArr.toString());
 
         postData(custListArr.toString());

@@ -37,6 +37,7 @@ public class ServerUpdateOrders extends AsyncTask<String, String, String> {
     private int beatRouteId;
     ProgressDialog dialog;
 
+    boolean showDialog = true;
     public ServerUpdateOrders(Context context, String serverHostAddr, int beat){
         mContext = context;
         serverHost = serverHostAddr;
@@ -57,21 +58,57 @@ public class ServerUpdateOrders extends AsyncTask<String, String, String> {
         mydb = new DBHelper(mContext);
         JSONArray orderArr = new JSONArray();
 
-        ArrayList<HashMap<String, String>> customerData = mydb.getOrderedCustomersForBeat(beatRouteId);
 
-        for(int i=0; i<customerData.size(); i++){
-            HashMap custHm = customerData.get(i);
+        if(args.length == 0){
+            ArrayList<HashMap<String, String>> customerData = mydb.getOrderedCustomersForBeat(beatRouteId);
 
+            for(int i=0; i<customerData.size(); i++){
+                HashMap custHm = customerData.get(i);
+
+                JSONObject custOrder = new JSONObject();
+                JSONArray orderList = new JSONArray();
+                String orderId = custHm.get("order_id").toString();
+                String custName = custHm.get("customer_name").toString();
+                Log.d("Order","Processing - " + custName);
+                ArrayList<HashMap<String, String>> orderItems;
+                try{
+
+                custOrder.put("order_id", orderId);
+                custOrder.put("customer_name", custName);
+
+                    orderItems = mydb.getOrderDetails(orderId);
+                    for(int j=0; j<orderItems.size(); j++){
+                        HashMap<String, String> odrHm = orderItems.get(j);
+                        String skuName = odrHm.get("sku_name");
+                        String qty = odrHm.get("quantity");
+                        String unit = odrHm.get("unit");
+                        JSONObject orderData = new JSONObject();
+                        orderData.put("sku_name", odrHm.get("sku_name"));
+                        orderData.put("quantity", odrHm.get("quantity"));
+                        orderData.put("unit", odrHm.get("unit"));
+                        orderList.put(orderData);
+
+
+                    }
+                    custOrder.put("order_details", orderList);
+                    orderArr.put(custOrder);
+                }catch(JSONException je) {
+                    je.printStackTrace();
+                }
+            }
+
+        }else{
+            showDialog = false;
+            String custName = args[0];
+            HashMap custHm = mydb.getCustomerInfo(custName);
+            String orderId = mydb.getOrderIdForCustomer(custName);
             JSONObject custOrder = new JSONObject();
             JSONArray orderList = new JSONArray();
-            String orderId = custHm.get("order_id").toString();
-            String custName = custHm.get("customer_name").toString();
-            Log.d("Order","Processing - " + custName);
             ArrayList<HashMap<String, String>> orderItems;
             try{
 
-            custOrder.put("order_id", orderId);
-            custOrder.put("customer_name", custName);
+                custOrder.put("order_id", orderId);
+                custOrder.put("customer_name", custName);
 
                 orderItems = mydb.getOrderDetails(orderId);
                 for(int j=0; j<orderItems.size(); j++){
@@ -92,6 +129,9 @@ public class ServerUpdateOrders extends AsyncTask<String, String, String> {
             }catch(JSONException je) {
                 je.printStackTrace();
             }
+
+
+
         }
 
         //Log.d("Sending to server loc:", locUpdateArr.toString());
@@ -136,6 +176,9 @@ public class ServerUpdateOrders extends AsyncTask<String, String, String> {
     @Override public void onPostExecute(String result)
     {
         //Toast.makeText(mContext, statusMessage, Toast.LENGTH_SHORT).show();
+        if(showDialog){
+
+        }
         dialog.dismiss();
         new AlertDialog.Builder(mContext)
                 .setTitle("Orders update Status")

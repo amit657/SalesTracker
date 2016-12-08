@@ -37,6 +37,7 @@
     <string name="title_activity_target_selection">TargetSelectionActivity</string>
     <string name="title_activity_target_visit_status">TargetVisitStatusActivity</string>
     <string name="title_activity_list_orders">ListOrders</string>
+    <string name="title_activity_view_order">ViewOrderActivity</string>
 
 
 </resources>

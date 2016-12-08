@@ -389,6 +389,12 @@ public class CreateOrderActivity extends ActionBarActivity implements AdapterVie
 
         writeFileOnInternalStorage(this, logBody.toString());
 
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("SalesTrackerPref", MODE_PRIVATE);
+
+
+
+
+        boolean retVal;
         if(orderItems.size() == 0){
             Toast.makeText(getBaseContext(), "Nothing to save!",
                     Toast.LENGTH_SHORT).show();
@@ -398,13 +404,17 @@ public class CreateOrderActivity extends ActionBarActivity implements AdapterVie
         if(!insertStatus){
             Toast.makeText(getBaseContext(), "Error saving data. Customer might have already ordered!",
                     Toast.LENGTH_SHORT).show();
-            return false;
+            retVal = false;
         }else{
             mydb.updateVisitStatus(customerName, "ORDER_RECEIVED", "");
             Toast.makeText(getBaseContext(), "Saved!",
                     Toast.LENGTH_SHORT).show();
-            return true;
+            retVal = true;
         }
+
+        //new ServerUpdate(CreateOrderActivity.this, pref.getString("serverHost", null), pref.getString("salesman", null), 0).execute(customerName);
+        //new ServerUpdateOrders(CreateOrderActivity.this, pref.getString("serverHost", null), 0).execute(customerName);
+        return retVal;
     }
 
     public void writeFileOnInternalStorage(Context mcoContext, String sBody){
