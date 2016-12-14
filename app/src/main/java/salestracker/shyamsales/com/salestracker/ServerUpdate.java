@@ -40,11 +40,22 @@ public class ServerUpdate extends AsyncTask<String, String, String> {
     int activeBeatRouteId;
 
     ProgressDialog dialog;
+    boolean showDialog = true;
 
     protected String doInBackground(String... args) {
 
         JSONArray custListArr = new JSONArray();
         mydb = new DBHelper(mContext);
+
+        if(args.length > 0){
+            showDialog = false;
+        }
+
+        if(showDialog) {
+            //dialog.setTitle("Uploading customer status");
+            //dialog.show();
+        }
+
 
         if(args.length == 0) {
             ArrayList<HashMap<String, String>> customerData = mydb.getAllCustomerDataForBeat(activeBeatRouteId);
@@ -110,8 +121,7 @@ public class ServerUpdate extends AsyncTask<String, String, String> {
 
     @Override
     protected void onPreExecute() {
-        dialog.setTitle("Uploading customer status");
-        dialog.show();
+
     }
 
 
@@ -145,13 +155,17 @@ public class ServerUpdate extends AsyncTask<String, String, String> {
     @Override public void onPostExecute(String result)
     {
         //Toast.makeText(mContext, statusMessage, Toast.LENGTH_SHORT).show();
-        dialog.dismiss();
+        if(showDialog) {
+           /* dialog.dismiss();
 
-        new AlertDialog.Builder(mContext)
-                .setTitle("Customer visit status server update")
-                .setMessage(statusMessage)
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .setPositiveButton(android.R.string.yes, null).show();
+            new AlertDialog.Builder(mContext)
+                    .setTitle("Customer visit status server update")
+                    .setMessage(statusMessage)
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setPositiveButton(android.R.string.yes, null).show();*/
+        }else{
+            Toast.makeText(mContext, "Status Uploaded", Toast.LENGTH_SHORT).show();
+        }
     }
 
 }

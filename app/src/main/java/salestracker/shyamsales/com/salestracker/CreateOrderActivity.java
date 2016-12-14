@@ -6,6 +6,8 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Environment;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -412,8 +414,14 @@ public class CreateOrderActivity extends ActionBarActivity implements AdapterVie
             retVal = true;
         }
 
-        //new ServerUpdate(CreateOrderActivity.this, pref.getString("serverHost", null), pref.getString("salesman", null), 0).execute(customerName);
-        //new ServerUpdateOrders(CreateOrderActivity.this, pref.getString("serverHost", null), 0).execute(customerName);
+        if(isNetworkAvailable()){
+            new ServerUpdate(CreateOrderActivity.this, pref.getString("serverHost", null), pref.getString("salesman", null), 0).execute(customerName);
+            new ServerUpdateOrders(CreateOrderActivity.this, pref.getString("serverHost", null), 0).execute(customerName);
+        }
+
+
+
+
         return retVal;
     }
 
@@ -527,7 +535,12 @@ public class CreateOrderActivity extends ActionBarActivity implements AdapterVie
         //updateTitleText();
     }
 
-
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
 
 
     @Override

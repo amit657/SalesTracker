@@ -48,8 +48,7 @@ public class ServerUpdateOrders extends AsyncTask<String, String, String> {
 
     @Override
     protected void onPreExecute() {
-        dialog.setTitle("Uploading Orders");
-        dialog.show();
+
     }
 
     protected String doInBackground(String... args) {
@@ -57,6 +56,15 @@ public class ServerUpdateOrders extends AsyncTask<String, String, String> {
 
         mydb = new DBHelper(mContext);
         JSONArray orderArr = new JSONArray();
+
+        if(args.length > 0){
+            showDialog = false;
+        }
+
+        if(showDialog) {
+            /*dialog.setTitle("Uploading Orders");
+            dialog.show();*/
+        }
 
 
         if(args.length == 0){
@@ -177,14 +185,16 @@ public class ServerUpdateOrders extends AsyncTask<String, String, String> {
     {
         //Toast.makeText(mContext, statusMessage, Toast.LENGTH_SHORT).show();
         if(showDialog){
-
+            /*dialog.dismiss();
+            new AlertDialog.Builder(mContext)
+                    .setTitle("Orders update Status")
+                    .setMessage(statusMessage)
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setPositiveButton(android.R.string.yes, null).show();*/
+        }else{
+            Toast.makeText(mContext, "Order Uploaded!", Toast.LENGTH_SHORT).show();
         }
-        dialog.dismiss();
-        new AlertDialog.Builder(mContext)
-                .setTitle("Orders update Status")
-                .setMessage(statusMessage)
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .setPositiveButton(android.R.string.yes, null).show();
+
     }
 
 

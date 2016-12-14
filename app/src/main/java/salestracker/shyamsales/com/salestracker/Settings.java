@@ -67,7 +67,10 @@ public class Settings extends ActionBarActivity {
 
             }
             Log.d("SSM","Position in spinner: " + i);
-            sItems.setSelection(i);
+            if(i < brArray.size()){
+                sItems.setSelection(i);
+            }
+
         }
 
 

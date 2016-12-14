@@ -187,7 +187,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 contentValues.put("order_id", "");
                 contentValues.put("date_updated", getDateTime());
                 contentValues.put("visit_status", getDateTime());
-                db.update("customer_details", contentValues, "customer_name =  '" + existingCustName + "'", null );
+                db.update("customer_details", contentValues, "customer_name =  '" + existingCustName.replaceAll("'", "''") + "'", null );
 
             }
         }else{
@@ -203,7 +203,7 @@ public class DBHelper extends SQLiteOpenHelper {
             contentValues.put("customer_name", customerName);
             contentValues.put("order_id", orderId);
             contentValues.put("date_updated", getDateTime());
-            db.update("customer_details", contentValues, "customer_name =  '" + customerName + "'", null );
+            db.update("customer_details", contentValues, "customer_name =  '" + customerName.replaceAll("'", "''") + "'", null );
 
         //}
         deleteAllOrderItemsForOrderId(orderId);
@@ -598,7 +598,7 @@ public class DBHelper extends SQLiteOpenHelper {
         contentValues.put("visit_status", visitStatus);
         contentValues.put("reason", reason);
         contentValues.put("date_updated", getDateTime());
-        db.update("customer_details", contentValues, "customer_name =  '" + customer_name + "'", null );
+        db.update("customer_details", contentValues, "customer_name =  '" + customer_name.replaceAll("'", "''") + "'", null );
         return true;
     }
 
